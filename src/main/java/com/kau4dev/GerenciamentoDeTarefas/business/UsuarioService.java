@@ -30,11 +30,16 @@ public class UsuarioService {
         );
     }
 
-    public void atualizarUsuario(Usuario usuario) {
-        if (usuario.getId() == null || !repository.existsById(usuario.getId())) {
-            throw new RuntimeException("Usuário não encontrado com o id: " + usuario.getId());
-        }
-        repository.save(usuario);
+    public void atualizarUsuario(Integer id, Usuario usuario) {
+        Usuario usuarioEntity = repository.findById(id).orElseThrow(
+                () -> new RuntimeException("Usuário não encontrado com o id: " + id)
+        );
+        Usuario usuarioAtualizado = Usuario.builder()
+                .id(usuarioEntity.getId())
+                .nome(usuario.getNome() != null ? usuario.getNome() : usuarioEntity.getNome())
+                .email(usuario.getEmail() != null ? usuario.getEmail() : usuarioEntity.getEmail())
+                .senha(usuario.getSenha() != null ? usuario.getSenha() : usuarioEntity.getSenha())
+                .build();
 
     }
 

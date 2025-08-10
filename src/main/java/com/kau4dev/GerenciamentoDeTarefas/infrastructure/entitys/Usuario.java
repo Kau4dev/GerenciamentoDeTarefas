@@ -1,15 +1,13 @@
 package com.kau4dev.GerenciamentoDeTarefas.infrastructure.entitys;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -27,4 +25,9 @@ public class Usuario {
     private String senha;
 
 
+    public Usuario(String nome, String email, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
 }
