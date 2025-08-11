@@ -30,5 +30,36 @@ public class UsuarioController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/listarUsuarios")
+    public ResponseEntity<List<Usuario>> listarUsuarios(){
+        List<Usuario> usuarios = usuarioService.listarUsuarios();
+        return ResponseEntity.ok(usuarios);
+    }
+
+    @GetMapping("/buscarUsuarioPorId/{id}")
+    public ResponseEntity<Usuario> buscarUsuarioPorId(@PathVariable Integer id){
+        Usuario usuario = usuarioService.buscarUsuarioPorId(id);
+        return ResponseEntity.ok(usuario);
+    }
+
+    @PutMapping("/atualizarUsuario/{id}")
+    public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Integer id, @RequestBody UsuarioDTO usuarioDTO){
+        var usuario = new Usuario(
+                usuarioDTO.getNome(),
+                usuarioDTO.getEmail(),
+                usuarioDTO.getSenha()
+        );
+        usuarioService.atualizarUsuario(id, usuario);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/deletarUsuario/{id}")
+    public ResponseEntity<Void> deletarUsuario(@PathVariable Integer id){
+        usuarioService.deletarUsuario(id);
+        return ResponseEntity.ok().build();
+    }
+    
+
+
 
 }
