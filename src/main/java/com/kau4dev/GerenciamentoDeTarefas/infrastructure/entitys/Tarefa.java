@@ -39,6 +39,9 @@ public class Tarefa {
     @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_tarefa_usuario"))
     private Usuario usuario;
 
+    @OneToMany(mappedBy = "commentario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Comentario> comentarios;
+
     public Tarefa(String titulo, String descricao, String status, Integer usuario) {
             this.titulo = titulo;
             this.descricao = descricao;

@@ -27,6 +27,9 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private java.util.List<Tarefa> tarefas;
 
+    @OneToMany(mappedBy = "comentario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Comentario> comentarios;
+
     public Usuario(String nome, String email, String senha) {
         this.nome = nome;
         this.email = email;
