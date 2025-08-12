@@ -30,6 +30,44 @@ public class TarefaService {
         );
     }
 
+    public void atualizarTarefa(Integer id, Tarefa tarefa) {
+        Tarefa tarefaEntity = tarefaRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Tarefa não encontrada com o id: " + id)
+        );
+        Tarefa tarefaAtualizada = Tarefa.builder()
+                .id(tarefaEntity.getId())
+                .titulo(tarefa.getTitulo() != null ? tarefa.getTitulo() : tarefaEntity.getTitulo())
+                .descricao(tarefa.getDescricao() != null ? tarefa.getDescricao() : tarefaEntity.getDescricao())
+                .status(tarefa.getStatus() != null ? tarefa.getStatus() : tarefaEntity.getStatus())
+                .dataCriacao(tarefaEntity.getDataCriacao())
+                .usuario(tarefa.getUsuario() != null ? tarefa.getUsuario() : tarefaEntity.getUsuario())
+                .build();
+        tarefaRepository.saveAndFlush(tarefaAtualizada);
+    }
+
+    public void alteraStatusTarefa(Integer id, Tarefa tarefa) {
+        Tarefa tarefaEntity = tarefaRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Tarefa não encontrada com o id: " + id)
+        );
+        Tarefa tarefaAtualizada = Tarefa.builder()
+                .id(tarefaEntity.getId())
+                .titulo(tarefaEntity.getTitulo())
+                .descricao(tarefaEntity.getDescricao())
+                .status(tarefa.getStatus() != null ? tarefa.getStatus() : tarefaEntity.getStatus())
+                .dataCriacao(tarefaEntity.getDataCriacao())
+                .dataConclusao(tarefa.getStatus() != null && tarefa.getStatus().name().equals("CONCLUIDA") ? java.time.LocalDateTime.now() : tarefaEntity.getDataConclusao())
+                .usuario(tarefaEntity.getUsuario())
+                .build();
+        tarefaRepository.saveAndFlush(tarefaAtualizada);
+    }
+
+    public void deletarTarefa(Integer id){
+        if (!tarefaRepository.existsById(id)){
+            throw new RuntimeException("Tarefa não encontrada com o id: " + id);
+        }
+        tarefaRepository.deleteById(id);
+    }
+
 
 
 }

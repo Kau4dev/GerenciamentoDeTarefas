@@ -35,7 +35,14 @@ public class Tarefa {
     @Column(name = "data_conclusao")
     private java.time.LocalDateTime dataConclusao;
 
-    @Column(name = "usuario_id", nullable = false)
-    private Integer usuarioId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_tarefa_usuario"))
+    private Usuario usuario;
 
+    public Tarefa(String titulo, String descricao, String status, Integer usuario) {
+            this.titulo = titulo;
+            this.descricao = descricao;
+            this.status = StatusTarefa.valueOf(status);
+            this.dataCriacao = java.time.LocalDateTime.now();
+    }
 }
