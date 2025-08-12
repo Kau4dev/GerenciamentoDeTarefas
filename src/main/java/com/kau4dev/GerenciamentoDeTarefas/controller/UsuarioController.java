@@ -16,10 +16,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UsuarioController {
 
-    private final UsuarioRepository usuarioRepository;
     private final UsuarioService usuarioService;
 
-    @PostMapping("/criarUsuario")
+    @PostMapping
     public ResponseEntity<Void> criarUsuario(@RequestBody UsuarioDTO usuarioDTO){
         var usuario = new Usuario(
                 usuarioDTO.getNome(),
@@ -30,19 +29,19 @@ public class UsuarioController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/listarUsuarios")
+    @GetMapping
     public ResponseEntity<List<Usuario>> listarUsuarios(){
         List<Usuario> usuarios = usuarioService.listarUsuarios();
         return ResponseEntity.ok(usuarios);
     }
 
-    @GetMapping("/buscarUsuarioPorId/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Usuario> buscarUsuarioPorId(@PathVariable Integer id){
         Usuario usuario = usuarioService.buscarUsuarioPorId(id);
         return ResponseEntity.ok(usuario);
     }
 
-    @PutMapping("/atualizarUsuario/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Integer id, @RequestBody UsuarioDTO usuarioDTO){
         var usuario = new Usuario(
                 usuarioDTO.getNome(),
@@ -53,7 +52,7 @@ public class UsuarioController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/deletarUsuario/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarUsuario(@PathVariable Integer id){
         usuarioService.deletarUsuario(id);
         return ResponseEntity.ok().build();
