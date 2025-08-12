@@ -5,6 +5,8 @@ import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entitys.enums.StatusTar
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -39,8 +41,8 @@ public class Tarefa {
     @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_tarefa_usuario"))
     private Usuario usuario;
 
-    @OneToMany(mappedBy = "commentario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private java.util.List<Comentario> comentarios;
+    @OneToMany(mappedBy = "tarefa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comentario> comentario;
 
     public Tarefa(String titulo, String descricao, String status, Integer usuario) {
             this.titulo = titulo;

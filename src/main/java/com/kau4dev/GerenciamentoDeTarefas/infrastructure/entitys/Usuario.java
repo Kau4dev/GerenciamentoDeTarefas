@@ -3,6 +3,8 @@ package com.kau4dev.GerenciamentoDeTarefas.infrastructure.entitys;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,10 +27,10 @@ public class Usuario {
     private String senha;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private java.util.List<Tarefa> tarefas;
+    private List<Tarefa> tarefa;
 
-    @OneToMany(mappedBy = "comentario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private java.util.List<Comentario> comentarios;
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comentario> comentario;
 
     public Usuario(String nome, String email, String senha) {
         this.nome = nome;
