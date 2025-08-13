@@ -15,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TarefaController {
 
-
     private final TarefaService tarefaService;
 
     @PostMapping

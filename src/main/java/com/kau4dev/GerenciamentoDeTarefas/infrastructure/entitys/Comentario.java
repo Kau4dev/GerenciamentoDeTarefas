@@ -30,5 +30,13 @@ public class Comentario {
     @JoinColumn(name = "tarefa_id", foreignKey = @ForeignKey(name = "fk_comentario_tarefa"))
     private Tarefa tarefa;
 
-
+    public Comentario(String texto, Tarefa tarefa, Usuario usuario) {
+        this.tarefa = tarefa;
+        this.usuario = usuario;
+        this.texto = texto;
+        this.dataCriacao = java.time.LocalDateTime.now();
+    }
 }
+
+
+
