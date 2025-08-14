@@ -5,12 +5,11 @@ import com.kau4dev.GerenciamentoDeTarefas.dto.TarefaDTO;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entitys.Tarefa;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("usuarios/tarefas")
 @RequiredArgsConstructor
 public class TarefaController {
