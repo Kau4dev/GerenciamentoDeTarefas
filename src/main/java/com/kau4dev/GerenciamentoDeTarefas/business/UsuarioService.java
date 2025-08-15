@@ -1,53 +1,59 @@
 package com.kau4dev.GerenciamentoDeTarefas.business;
 
+import com.kau4dev.GerenciamentoDeTarefas.dto.UsuarioDTO;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entitys.Usuario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.UsuarioRepository;
+import com.kau4dev.GerenciamentoDeTarefas.mapper.UsuarioMapper;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository repository;
+    private final UsuarioMapper mapper;
 
-    public UsuarioService(UsuarioRepository repository) {
+    public UsuarioService(UsuarioRepository repository, UsuarioMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
-    public void salvarUsuario(Usuario usuario) {
-        repository.saveAndFlush(usuario);
-
+    public UsuarioDTO salvarUsuario(UsuarioDTO usuarioDTO) {
+        Usuario usuario = mapper.toEntity(usuarioDTO);
+        Usuario usuarioSalvo = repository.save(usuario);
+        return mapper.toDTO(usuarioSalvo);
     }
 
-    public List<Usuario> listarUsuarios() {
-        return repository.findAll();
+    public List<UsuarioDTO> listarUsuarios() {
+        List<Usuario> usuarios = repository.findAll();
+        return usuarios.stream()
+                .map(mapper::toDTO)
+                .toList();
     }
 
-    public Usuario buscarUsuarioPorId(Integer id) {
-        return repository.findById(id).orElseThrow(
-                () -> new RuntimeException("usuario não encontrado com o id: " + id)
+    public UsuarioDTO buscarUsuarioPorId(Integer idUsuario) {
+        Usuario usuario = repository.findById(idUsuario).orElseThrow(
+                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
         );
+        return mapper.toDTO(usuario);
     }
 
-    public void atualizarUsuario(Integer id, Usuario usuario) {
-        Usuario usuarioEntity = repository.findById(id).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado com o id: " + id)
+    public UsuarioDTO atualizarUsuario(Integer idUsuario, UsuarioDTO usuarioDTO) {
+        Usuario usuarioEntity = repository.findById(idUsuario).orElseThrow(
+                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
         );
-        Usuario usuarioAtualizado = Usuario.builder()
-                .id(usuarioEntity.getId())
-                .nome(usuario.getNome() != null ? usuario.getNome() : usuarioEntity.getNome())
-                .email(usuario.getEmail() != null ? usuario.getEmail() : usuarioEntity.getEmail())
-                .senha(usuario.getSenha() != null ? usuario.getSenha() : usuarioEntity.getSenha())
-                .build();
-
+        usuarioEntity.setNome(usuarioDTO.getNome() != null ? usuarioDTO.getNome() : usuarioEntity.getNome());
+        usuarioEntity.setEmail(usuarioDTO.getEmail() != null ? usuarioDTO.getEmail() : usuarioEntity.getEmail());
+        usuarioEntity.setSenha(usuarioDTO.getSenha() != null ? usuarioDTO.getSenha() : usuarioEntity.getSenha());
+        Usuario usuarioAtualizado = repository.saveAndFlush(usuarioEntity);
+        return mapper.toDTO(usuarioAtualizado);
     }
 
-    public void deletarUsuario(Integer id){
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Usuário não encontrado com o id: " + id);
-        }
-        repository.deleteById(id);
+    public void deletarUsuario(Integer idUsuario) {
+          repository.findById(idUsuario).orElseThrow(
+                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+        );
+        repository.deleteById(idUsuario);
     }
 
 }
