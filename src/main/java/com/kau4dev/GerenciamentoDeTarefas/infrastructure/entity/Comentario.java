@@ -1,4 +1,4 @@
-package com.kau4dev.GerenciamentoDeTarefas.infrastructure.entitys;
+package com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

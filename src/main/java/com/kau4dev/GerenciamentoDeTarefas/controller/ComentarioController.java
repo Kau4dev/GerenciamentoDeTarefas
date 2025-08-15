@@ -2,7 +2,7 @@ package com.kau4dev.GerenciamentoDeTarefas.controller;
 
 import com.kau4dev.GerenciamentoDeTarefas.business.ComentarioService;
 import com.kau4dev.GerenciamentoDeTarefas.dto.ComentarioDTO;
-import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entitys.Comentario;
+import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Comentario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.TarefaRepository;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class ComentarioController {
 
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping()
     public ResponseEntity<Void> deletarComentario(@PathVariable("id") Integer id){
         comentarioService.deletarComentario(id);
         return ResponseEntity.ok().build();

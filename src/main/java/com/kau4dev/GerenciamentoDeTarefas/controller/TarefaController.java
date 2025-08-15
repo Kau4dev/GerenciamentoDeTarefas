@@ -2,7 +2,7 @@ package com.kau4dev.GerenciamentoDeTarefas.controller;
 
 import com.kau4dev.GerenciamentoDeTarefas.business.TarefaService;
 import com.kau4dev.GerenciamentoDeTarefas.dto.TarefaDTO;
-import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entitys.Tarefa;
+import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Tarefa;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

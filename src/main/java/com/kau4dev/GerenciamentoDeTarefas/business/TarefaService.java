@@ -1,6 +1,6 @@
 package com.kau4dev.GerenciamentoDeTarefas.business;
 
-import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entitys.Tarefa;
+import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Tarefa;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.TarefaRepository;
 import org.springframework.stereotype.Service;
 

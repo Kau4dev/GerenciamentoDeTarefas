@@ -1,7 +1,7 @@
-package com.kau4dev.GerenciamentoDeTarefas.infrastructure.entitys;
+package com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity;
 
 
-import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entitys.enums.StatusTarefa;
+import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.enums.StatusTarefa;
 import jakarta.persistence.*;
 import lombok.*;
 

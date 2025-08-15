@@ -1,4 +1,4 @@
-package com.kau4dev.GerenciamentoDeTarefas.infrastructure.entitys.enums;
+package com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.enums;
 
 
 public enum StatusTarefa {

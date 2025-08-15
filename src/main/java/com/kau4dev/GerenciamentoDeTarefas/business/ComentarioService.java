@@ -1,6 +1,6 @@
 package com.kau4dev.GerenciamentoDeTarefas.business;
 
-import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entitys.Comentario;
+import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Comentario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.ComentarioRepository;
 import org.springframework.stereotype.Service;
 

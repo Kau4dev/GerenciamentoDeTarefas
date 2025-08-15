@@ -1,7 +1,7 @@
 package com.kau4dev.GerenciamentoDeTarefas.business;
 
 import com.kau4dev.GerenciamentoDeTarefas.dto.UsuarioDTO;
-import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entitys.Usuario;
+import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.UsuarioRepository;
 import com.kau4dev.GerenciamentoDeTarefas.mapper.UsuarioMapper;
 import org.springframework.stereotype.Service;
