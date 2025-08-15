@@ -20,41 +20,29 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<Void> criarUsuario(@RequestBody UsuarioDTO usuarioDTO){
-        var usuario = new Usuario(
-                usuarioDTO.getNome(),
-                usuarioDTO.getEmail(),
-                usuarioDTO.getSenha()
-        );
-        usuarioService.salvarUsuario(usuario);
+        usuarioService.salvarUsuario(usuarioDTO);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> listarUsuarios(){
-        List<Usuario> usuarios = usuarioService.listarUsuarios();
-        return ResponseEntity.ok(usuarios);
+    public ResponseEntity<List<UsuarioDTO>> listarUsuarios(){
+        return ResponseEntity.ok(usuarioService.listarUsuarios());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Usuario> buscarUsuarioPorId(@PathVariable Integer id){
-        Usuario usuario = usuarioService.buscarUsuarioPorId(id);
-        return ResponseEntity.ok(usuario);
+    @GetMapping("/{idUsuario}")
+    public ResponseEntity<UsuarioDTO> buscarUsuarioPorId(@PathVariable Integer idUsuario){
+        return ResponseEntity.ok(usuarioService.buscarUsuarioPorId(idUsuario));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Integer id, @RequestBody UsuarioDTO usuarioDTO){
-        var usuario = new Usuario(
-                usuarioDTO.getNome(),
-                usuarioDTO.getEmail(),
-                usuarioDTO.getSenha()
-        );
-        usuarioService.atualizarUsuario(id, usuario);
-        return ResponseEntity.ok().build();
+    @PutMapping("/{idUsuario}")
+    public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable Integer idUsuario, @RequestBody UsuarioDTO usuarioDTO){
+        usuarioService.atualizarUsuario(idUsuario, usuarioDTO);
+        return ResponseEntity.ok(usuarioDTO);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarUsuario(@PathVariable Integer id){
-        usuarioService.deletarUsuario(id);
+    @DeleteMapping("/{idUsuario}")
+    public ResponseEntity<Void> deletarUsuario(@PathVariable Integer idUsuario){
+        usuarioService.deletarUsuario(idUsuario);
         return ResponseEntity.ok().build();
     }
     
