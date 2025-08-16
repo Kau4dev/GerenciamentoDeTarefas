@@ -24,18 +24,12 @@ public class Comentario {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_comentario_usuario"))
-    private Usuario usuario;
+    private Usuario idUsuario;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "tarefa_id", foreignKey = @ForeignKey(name = "fk_comentario_tarefa"))
-    private Tarefa tarefa;
+    private Tarefa idTarefa;
 
-    public Comentario(String texto, Tarefa tarefa, Usuario usuario) {
-        this.tarefa = tarefa;
-        this.usuario = usuario;
-        this.texto = texto;
-        this.dataCriacao = java.time.LocalDateTime.now();
-    }
 }
 
 

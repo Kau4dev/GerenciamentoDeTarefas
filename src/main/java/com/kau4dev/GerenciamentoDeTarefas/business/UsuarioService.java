@@ -20,7 +20,7 @@ public class UsuarioService {
 
     public UsuarioDTO salvarUsuario(UsuarioDTO usuarioDTO) {
         Usuario usuario = mapper.toEntity(usuarioDTO);
-        Usuario usuarioSalvo = repository.save(usuario);
+        Usuario usuarioSalvo = repository.saveAndFlush(usuario);
         return mapper.toDTO(usuarioSalvo);
     }
 

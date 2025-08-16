@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ComentarioDTO {
     private String texto;
-    private Integer tarefa;
-    private Integer usuario;
+    private Integer idTarefa;
+    private Integer idUsuario;
 
 }

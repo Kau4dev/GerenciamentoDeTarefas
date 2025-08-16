@@ -4,7 +4,7 @@ package com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.enums.StatusTarefa;
 import jakarta.persistence.*;
 import lombok.*;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -32,22 +32,16 @@ public class Tarefa {
     private StatusTarefa status;
 
     @Column(name = "data_criacao", nullable = false)
-    private java.time.LocalDateTime dataCriacao;
+    private LocalDateTime dataCriacao;
 
     @Column(name = "data_conclusao")
-    private java.time.LocalDateTime dataConclusao;
+    private LocalDateTime dataConclusao;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_tarefa_usuario"))
-    private Usuario usuario;
+    private Usuario idUsuario;
 
     @OneToMany(mappedBy = "tarefa", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comentario> comentario;
 
-    public Tarefa(String titulo, String descricao, String status, Integer usuario) {
-            this.titulo = titulo;
-            this.descricao = descricao;
-            this.status = StatusTarefa.valueOf(status);
-            this.dataCriacao = java.time.LocalDateTime.now();
-    }
 }
