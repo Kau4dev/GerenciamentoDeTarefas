@@ -2,7 +2,6 @@ package com.kau4dev.GerenciamentoDeTarefas.business;
 
 import com.kau4dev.GerenciamentoDeTarefas.dto.TarefaDTO;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Tarefa;
-import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.TarefaRepository;
 import com.kau4dev.GerenciamentoDeTarefas.mapper.TarefaMapper;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.enums.StatusTarefa;
@@ -22,30 +21,29 @@ public class TarefaService {
         this.mapper = mapper;
     }
 
-    public TarefaDTO criarTarefa(Usuario usuario, TarefaDTO tarefaDTO) {
+    public TarefaDTO criarTarefa(Integer idTarefa, TarefaDTO tarefaDTO) {
         Tarefa tarefa = mapper.toEntity(tarefaDTO);
-        tarefa.setIdUsuario(usuario);
         tarefa.setDataCriacao(LocalDateTime.now());
         Tarefa tarefaSalva = repository.saveAndFlush(tarefa);
         return mapper.toDTO(tarefaSalva);
     }
 
-    public List<TarefaDTO> listarTarefas() {
-        List<Tarefa> tarefas = repository.findAll();
+    public List<TarefaDTO> listarTarefas(Integer idusuario) {
+        List<Tarefa> tarefas = repository.findByUsuarioId(idusuario);
         return tarefas.stream()
                 .map(mapper::toDTO)
                 .toList();
     }
 
-    public TarefaDTO buscarTarefaPorId(Integer idTarefa) {
-        Tarefa tarefa = repository.findById(idTarefa).orElseThrow(
+    public TarefaDTO buscarTarefaPorId(Integer idUsuario, Integer idTarefa) {
+        Tarefa tarefa = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
                 () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
         );
         return mapper.toDTO(tarefa);
     }
 
-    public TarefaDTO atualizarTarefa(Integer idTarefa, TarefaDTO tarefaDTO) {
-        Tarefa tarefaEntity = repository.findById(idTarefa).orElseThrow(
+    public TarefaDTO atualizarTarefa(Integer idUsuario, Integer idTarefa, TarefaDTO tarefaDTO) {
+        Tarefa tarefaEntity = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
                 () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
         );
         tarefaEntity.setTitulo(tarefaDTO.getTitulo() != null ? tarefaDTO.getTitulo() : tarefaEntity.getTitulo());
@@ -55,26 +53,26 @@ public class TarefaService {
         return mapper.toDTO(tarefaAtualizada);
     }
 
-    public TarefaDTO alteraStatusTarefa(Integer idTarefa, TarefaDTO tarefaDTO) {
-        Tarefa tarefaEntity = repository.findById(idTarefa).orElseThrow(
+    public TarefaDTO alteraStatusTarefa(Integer idUsuario, Integer idTarefa, TarefaDTO tarefaDTO) {
+        Tarefa tarefaEntity = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
                 () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
         );
-        if(tarefaDTO.getStatus() != null) {
+        if (tarefaDTO.getStatus() != null) {
             tarefaEntity.setStatus(StatusTarefa.valueOf(tarefaDTO.getStatus().name()));
-            if(tarefaEntity.getStatus() == StatusTarefa.CONCLUIDA) {
+            if (tarefaEntity.getStatus() == StatusTarefa.CONCLUIDA) {
                 tarefaEntity.setDataConclusao(LocalDateTime.now());
             }
         } else {
             throw new RuntimeException("Status inválido ou não fornecido");
         }
-        return mapper.toDTO(tarefaEntity);
+        Tarefa tarefaAtualizada = repository.saveAndFlush(tarefaEntity);
+        return mapper.toDTO(tarefaAtualizada);
     }
 
     public void deletarTarefa(Integer idUsuario, Integer idTarefa) {
-       repository.findById(idTarefa).orElseThrow(
-           () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
-       );
-       repository.deleteById(idTarefa);
-   }
-
+        repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
+                () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
+        );
+        repository.deleteById(idTarefa);
+    }
 }
