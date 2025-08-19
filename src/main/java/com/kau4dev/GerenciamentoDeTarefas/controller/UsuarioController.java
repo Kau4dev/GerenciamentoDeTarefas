@@ -19,7 +19,7 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<Void> criarUsuario(@RequestBody UsuarioDTO usuarioDTO){
         usuarioService.salvarUsuario(usuarioDTO);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(201).build();
     }
 
     @GetMapping
@@ -32,10 +32,11 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.buscarUsuarioPorId(idUsuario));
     }
 
+     //nao pega o corpo da requisição, apenas o idUsuario
     @PutMapping("/{idUsuario}")
     public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable Integer idUsuario, @RequestBody UsuarioDTO usuarioDTO){
-        usuarioService.atualizarUsuario(idUsuario, usuarioDTO);
-        return ResponseEntity.ok(usuarioDTO);
+        UsuarioDTO atualizado = usuarioService.atualizarUsuario(idUsuario, usuarioDTO);
+        return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{idUsuario}")
