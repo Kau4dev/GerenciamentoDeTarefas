@@ -16,7 +16,7 @@ public class TarefaController {
     private final TarefaService tarefaService;
 
     @PostMapping
-    public ResponseEntity<Void> criarTarefa(@PathVariable("IdUsuario") Integer idUsuario, @RequestBody TarefaDTO tarefaDTO){
+    public ResponseEntity<Void> criarTarefa(@PathVariable("idUsuario") Integer idUsuario, @RequestBody TarefaDTO tarefaDTO){
         tarefaService.criarTarefa(idUsuario,tarefaDTO);
         return ResponseEntity.status(201).build();
     }
