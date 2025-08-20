@@ -24,11 +24,11 @@ public class Comentario {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_comentario_usuario"))
-    private Usuario idUsuario;
+    private Usuario usuario;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "tarefa_id", foreignKey = @ForeignKey(name = "fk_comentario_tarefa"))
-    private Tarefa idTarefa;
+    private Tarefa tarefa;
 
 }
 
