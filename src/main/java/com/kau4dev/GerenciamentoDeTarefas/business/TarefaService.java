@@ -2,7 +2,9 @@ package com.kau4dev.GerenciamentoDeTarefas.business;
 
 import com.kau4dev.GerenciamentoDeTarefas.dto.TarefaDTO;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Tarefa;
+import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.TarefaRepository;
+import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.UsuarioRepository;
 import com.kau4dev.GerenciamentoDeTarefas.mapper.TarefaMapper;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.enums.StatusTarefa;
 import org.springframework.stereotype.Service;
@@ -15,14 +17,20 @@ public class TarefaService {
 
     private final TarefaRepository repository;
     private final TarefaMapper mapper;
+    private final UsuarioRepository usuarioRepository;
 
-    public TarefaService(TarefaRepository repository, TarefaMapper mapper) {
+    public TarefaService(TarefaRepository repository, TarefaMapper mapper, UsuarioRepository usuarioRepository) {
         this.repository = repository;
         this.mapper = mapper;
+        this.usuarioRepository = usuarioRepository;
     }
 
-    public TarefaDTO criarTarefa(Integer idTarefa, TarefaDTO tarefaDTO) {
+    public TarefaDTO criarTarefa(Integer idUsuario, TarefaDTO tarefaDTO) {
         Tarefa tarefa = mapper.toEntity(tarefaDTO);
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(
+                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+        );
+        tarefa.setUsuario(usuario);
         tarefa.setDataCriacao(LocalDateTime.now());
         Tarefa tarefaSalva = repository.saveAndFlush(tarefa);
         return mapper.toDTO(tarefaSalva);
@@ -70,9 +78,9 @@ public class TarefaService {
     }
 
     public void deletarTarefa(Integer idUsuario, Integer idTarefa) {
-        repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
+        Tarefa tarefa = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
                 () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
         );
-        repository.deleteById(idTarefa);
+        repository.delete(tarefa);
     }
 }

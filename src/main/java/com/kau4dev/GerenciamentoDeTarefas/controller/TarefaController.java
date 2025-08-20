@@ -16,38 +16,37 @@ public class TarefaController {
     private final TarefaService tarefaService;
 
     @PostMapping
-    public ResponseEntity<Void> criarTarefa(@PathVariable Integer idUsuario, @RequestBody TarefaDTO tarefaDTO){
+    public ResponseEntity<Void> criarTarefa(@PathVariable("IdUsuario") Integer idUsuario, @RequestBody TarefaDTO tarefaDTO){
         tarefaService.criarTarefa(idUsuario,tarefaDTO);
-        return ResponseEntity.ok().build();
-
+        return ResponseEntity.status(201).build();
     }
 
     @GetMapping
     public ResponseEntity<List<TarefaDTO>> listarTarefa(@PathVariable Integer idUsuario){
-        List<TarefaDTO> tarefas = tarefaService.listarTarefas();
+        List<TarefaDTO> tarefas = tarefaService.listarTarefas(idUsuario);
         return ResponseEntity.ok(tarefas);
     }
 
     @GetMapping("/{idTarefa}")
     public ResponseEntity<TarefaDTO> buscarTarefaPorId(@PathVariable Integer idUsuario, @PathVariable Integer idTarefa){
-        TarefaDTO tarefa = tarefaService.buscarTarefaPorId(idTarefa);
+        TarefaDTO tarefa = tarefaService.buscarTarefaPorId(idUsuario, idTarefa);
         return ResponseEntity.ok(tarefa);
     }
 
     @PutMapping("/{idTarefa}")
     public ResponseEntity<TarefaDTO> atualizarTarefa(@PathVariable Integer idUsuario, @PathVariable Integer idTarefa, @RequestBody TarefaDTO tarefaDTO){
-        return ResponseEntity.ok(tarefaService.atualizarTarefa(idTarefa, tarefaDTO));
+        return ResponseEntity.ok(tarefaService.atualizarTarefa(idUsuario, idTarefa, tarefaDTO));
     }
 
     @PatchMapping("/{idTarefa}/status")
     public ResponseEntity<TarefaDTO> alteraStatusTarefa(@PathVariable Integer idUsuario, @PathVariable Integer idTarefa, @RequestBody TarefaDTO tarefaDTO){
-        return ResponseEntity.ok(tarefaService.alteraStatusTarefa(idTarefa, tarefaDTO));
+        return ResponseEntity.ok(tarefaService.alteraStatusTarefa(idUsuario, idTarefa, tarefaDTO));
     }
 
     @DeleteMapping("/{idTarefa}")
     public ResponseEntity<Void> deletarTarefa(@PathVariable Integer idUsuario, @PathVariable Integer idTarefa){
         tarefaService.deletarTarefa(idUsuario, idTarefa);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(204).build();
     }
 
     

@@ -12,7 +12,5 @@ public interface TarefaRepository extends JpaRepository<Tarefa, Integer> {
 
     Optional<Tarefa> findByIdAndUsuarioId(Integer id, Integer usuarioId);
 
-    void deleteByIdAndUsuarioId(Integer id, Integer usuarioId);
 
-    Integer id(Integer id);
 }

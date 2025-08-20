@@ -10,8 +10,10 @@ import org.mapstruct.Mapping;
 public interface TarefaMapper {
 
     @Mapping(source = "id", target = "idTarefa")
+    @Mapping(source = "usuario.id", target = "idUsuario")
     TarefaDTO toDTO(Tarefa tarefa);
 
-    @InheritInverseConfiguration
+    @Mapping(source = "idTarefa", target = "id")
+    @Mapping(source = "idUsuario", target = "usuario.id")
     Tarefa toEntity(TarefaDTO tarefaDTO);
 }

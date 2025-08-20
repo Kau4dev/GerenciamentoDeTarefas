@@ -39,7 +39,7 @@ public class Tarefa {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_tarefa_usuario"))
-    private Usuario idUsuario;
+    private Usuario usuario;
 
     @OneToMany(mappedBy = "tarefa", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comentario> comentario;
