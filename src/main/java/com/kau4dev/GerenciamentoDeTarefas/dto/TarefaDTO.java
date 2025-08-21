@@ -2,6 +2,7 @@ package com.kau4dev.GerenciamentoDeTarefas.dto;
 
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.enums.StatusTarefa;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -19,10 +20,9 @@ public class TarefaDTO {
     @Size(max = 255, message = "A descrição não pode ter mais de 255 caracteres")
     private String descricao;
 
-    @NotBlank(message = "O status não pode ser vazio")
+    @NotNull(message = "O status não pode ser vazio")
     private StatusTarefa status;
 
-    @NotBlank(message = "O usuário não pode ser vazio")
     private Integer idUsuario;
 
     private LocalDateTime dataCriacao;

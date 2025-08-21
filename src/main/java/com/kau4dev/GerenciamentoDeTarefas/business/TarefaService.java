@@ -61,6 +61,7 @@ public class TarefaService {
         return mapper.toDTO(tarefaAtualizada);
     }
 
+    //ADICIONAR PRA COMPLETAR OS DADOS
     public TarefaDTO alteraStatusTarefa(Integer idUsuario, Integer idTarefa, TarefaDTO tarefaDTO) {
         Tarefa tarefaEntity = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
                 () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)

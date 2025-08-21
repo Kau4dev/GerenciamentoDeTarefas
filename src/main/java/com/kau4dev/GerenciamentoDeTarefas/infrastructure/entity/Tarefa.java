@@ -4,6 +4,7 @@ package com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.enums.StatusTarefa;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -34,7 +35,7 @@ public class Tarefa {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    @NotBlank(message = "O status não pode ser vazio")
+    @NotNull(message = "O status não pode ser vazio")
     private StatusTarefa status;
 
     @Column(name = "data_criacao", nullable = false)
@@ -45,7 +46,6 @@ public class Tarefa {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_tarefa_usuario"))
-    @NotBlank(message = "O usuário não pode ser vazio")
     private Usuario usuario;
 
     @OneToMany(mappedBy = "tarefa", cascade = CascadeType.ALL, orphanRemoval = true)

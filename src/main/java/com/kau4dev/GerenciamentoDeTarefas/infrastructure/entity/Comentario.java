@@ -2,6 +2,7 @@ package com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -28,12 +29,10 @@ public class Comentario {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_comentario_usuario"))
-    @NotBlank(message = "O usuário não pode ser vazio")
     private Usuario usuario;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "tarefa_id", foreignKey = @ForeignKey(name = "fk_comentario_tarefa"))
-    @NotBlank(message = "A tarefa não pode ser vazia")
     private Tarefa tarefa;
 
 }
