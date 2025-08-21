@@ -65,7 +65,6 @@ public class ComentarioService {
         }
 
         repository.delete(comentario);
-        //pq mais seguro?
     }
 
 
