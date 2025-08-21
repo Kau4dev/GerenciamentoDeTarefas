@@ -1,8 +1,11 @@
 package com.kau4dev.GerenciamentoDeTarefas.controller;
 
-
 import com.kau4dev.GerenciamentoDeTarefas.business.UsuarioService;
 import com.kau4dev.GerenciamentoDeTarefas.dto.UsuarioDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,28 +23,57 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
+    @Operation(summary = "Cria um novo usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
     @PostMapping
-    public ResponseEntity<Void> criarUsuario(@RequestBody UsuarioDTO usuarioDTO){
+    public ResponseEntity<Void> criarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO){
         usuarioService.salvarUsuario(usuarioDTO);
         return ResponseEntity.status(201).build();
     }
 
+    @Operation(summary = "Lista todos os usuários")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> listarUsuarios(){
         return ResponseEntity.ok(usuarioService.listarUsuarios());
     }
 
+    @Operation(summary = "Busca um usuário pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
     @GetMapping("/{idUsuario}")
-    public ResponseEntity<UsuarioDTO> buscarUsuarioPorId(@PathVariable Integer idUsuario){
+    public ResponseEntity<UsuarioDTO> buscarUsuarioPorId(@PathVariable @Valid Integer idUsuario){
         return ResponseEntity.ok(usuarioService.buscarUsuarioPorId(idUsuario));
     }
 
+    @Operation(summary = "Atualiza um usuário existente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
     @PutMapping("/{idUsuario}")
     public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable Integer idUsuario, @RequestBody UsuarioDTO usuarioDTO){
         UsuarioDTO atualizado = usuarioService.atualizarUsuario(idUsuario, usuarioDTO);
         return ResponseEntity.ok(atualizado);
     }
 
+    @Operation(summary = "Deleta um usuário pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Usuário deletado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
     @DeleteMapping("/{idUsuario}")
     public ResponseEntity<Void> deletarUsuario(@PathVariable Integer idUsuario){
         usuarioService.deletarUsuario(idUsuario);
@@ -59,8 +91,8 @@ public class UsuarioController {
     public Map<String, String> handleBadRequest(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
 
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = error.getObjectName();
+        ex.getBindingResult().getFieldErrors().forEach((error) -> {
+            String fieldName = error.getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
