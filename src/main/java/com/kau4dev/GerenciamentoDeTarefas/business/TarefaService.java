@@ -1,6 +1,7 @@
 package com.kau4dev.GerenciamentoDeTarefas.business;
 
-import com.kau4dev.GerenciamentoDeTarefas.dto.TarefaDTO;
+import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaCreateDTO;
+import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaUpdateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Tarefa;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.TarefaRepository;
@@ -25,8 +26,8 @@ public class TarefaService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public TarefaDTO criarTarefa(Integer idUsuario, TarefaDTO tarefaDTO) {
-        Tarefa tarefa = mapper.toEntity(tarefaDTO);
+    public TarefaCreateDTO criarTarefa(Integer idUsuario, TarefaCreateDTO tarefaCreateDTO) {
+        Tarefa tarefa = mapper.toEntity(tarefaCreateDTO);
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(
                 () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
         );
@@ -36,46 +37,46 @@ public class TarefaService {
         return mapper.toDTO(tarefaSalva);
     }
 
-    public List<TarefaDTO> listarTarefas(Integer idusuario) {
+    public List<TarefaCreateDTO> listarTarefas(Integer idusuario) {
         List<Tarefa> tarefas = repository.findByUsuarioId(idusuario);
         return tarefas.stream()
                 .map(mapper::toDTO)
                 .toList();
     }
 
-    public TarefaDTO buscarTarefaPorId(Integer idUsuario, Integer idTarefa) {
+    public TarefaCreateDTO buscarTarefaPorId(Integer idUsuario, Integer idTarefa) {
         Tarefa tarefa = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
                 () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
         );
         return mapper.toDTO(tarefa);
     }
 
-    public TarefaDTO atualizarTarefa(Integer idUsuario, Integer idTarefa, TarefaDTO tarefaDTO) {
+    public TarefaUpdateDTO atualizarTarefa(Integer idUsuario, Integer idTarefa, TarefaUpdateDTO tarefaupdateDTO) {
         Tarefa tarefaEntity = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
                 () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
         );
-        tarefaEntity.setTitulo(tarefaDTO.getTitulo() != null ? tarefaDTO.getTitulo() : tarefaEntity.getTitulo());
-        tarefaEntity.setDescricao(tarefaDTO.getDescricao() != null ? tarefaDTO.getDescricao() : tarefaEntity.getDescricao());
-        tarefaEntity.setStatus(tarefaDTO.getStatus() != null ? StatusTarefa.valueOf(tarefaDTO.getStatus().name()) : tarefaEntity.getStatus());
+        tarefaEntity.setTitulo(tarefaupdateDTO.getTitulo() != null ? tarefaupdateDTO.getTitulo() : tarefaEntity.getTitulo());
+        tarefaEntity.setDescricao(tarefaupdateDTO.getDescricao() != null ? tarefaupdateDTO.getDescricao() : tarefaEntity.getDescricao());
         Tarefa tarefaAtualizada = repository.saveAndFlush(tarefaEntity);
-        return mapper.toDTO(tarefaAtualizada);
+        return mapper.toUpdateDTO(tarefaAtualizada);
     }
 
-    //ADICIONAR PRA COMPLETAR OS DADOS
-    public TarefaDTO alteraStatusTarefa(Integer idUsuario, Integer idTarefa, TarefaDTO tarefaDTO) {
+    public TarefaUpdateDTO alteraStatusTarefa(Integer idUsuario, Integer idTarefa, TarefaUpdateDTO tarefaUpdateDTO) {
         Tarefa tarefaEntity = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
                 () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
         );
-        if (tarefaDTO.getStatus() != null) {
-            tarefaEntity.setStatus(StatusTarefa.valueOf(tarefaDTO.getStatus().name()));
+        if (tarefaUpdateDTO.getStatus() != null) {
+            tarefaEntity.setStatus(StatusTarefa.valueOf(tarefaUpdateDTO.getStatus().name()));
             if (tarefaEntity.getStatus() == StatusTarefa.CONCLUIDA) {
                 tarefaEntity.setDataConclusao(LocalDateTime.now());
+            } else {
+                tarefaEntity.setDataConclusao(null);
             }
         } else {
             throw new RuntimeException("Status inválido ou não fornecido");
         }
         Tarefa tarefaAtualizada = repository.saveAndFlush(tarefaEntity);
-        return mapper.toDTO(tarefaAtualizada);
+        return mapper.toUpdateDTO(tarefaAtualizada);
     }
 
     public void deletarTarefa(Integer idUsuario, Integer idTarefa) {

@@ -5,6 +5,7 @@ import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.enums.StatusTare
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -27,10 +28,14 @@ public class Tarefa {
     @Column(name="titulo", nullable = false, length = 100)
     @NotBlank(message = "O título não pode ser vazio")
     @Size(max = 100, message = "O título não pode ter mais de 100 caracteres")
+    @Pattern(regexp = "^[A-ZÀ-Ý][a-zA-ZÀ-ÿ\\s]*$",
+            message = "O título deve começar com letra maiúscula e conter apenas letras e espaços")
     private String titulo;
 
     @Column(name="descricao", length = 255)
     @Size(max = 255, message = "A descrição não pode ter mais de 255 caracteres")
+    @Pattern(regexp = "^[A-ZÀ-Ý][a-zA-ZÀ-ÿ\\s]*$",
+            message = "O nome deve começar com letra maiúscula e conter apenas letras e espaços")
     private String descricao;
 
     @Enumerated(EnumType.STRING)
@@ -46,6 +51,7 @@ public class Tarefa {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_tarefa_usuario"))
+    @NotNull(message = "O usuário não pode ser nulo")
     private Usuario usuario;
 
     @OneToMany(mappedBy = "tarefa", cascade = CascadeType.ALL, orphanRemoval = true)
