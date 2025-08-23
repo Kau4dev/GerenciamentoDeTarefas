@@ -1,6 +1,6 @@
 package com.kau4dev.GerenciamentoDeTarefas.mapper;
 
-import com.kau4dev.GerenciamentoDeTarefas.dto.ComentarioDTO;
+import com.kau4dev.GerenciamentoDeTarefas.dto.comentarioDTO.ComentarioCreateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Comentario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Tarefa;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
@@ -14,12 +14,12 @@ public interface ComentarioMapper {
     @Mapping(source = "id", target = "idComentario")
     @Mapping(source = "usuario.id", target = "idUsuario")
     @Mapping(source = "tarefa.id", target = "idTarefa")
-    ComentarioDTO toDTO(Comentario comentario);
+    ComentarioCreateDTO toDTO(Comentario comentario);
 
     @Mapping(source = "idComentario", target = "id")
     @Mapping(source = "idUsuario", target = "usuario", qualifiedByName = "mapUsuario")
     @Mapping(source = "idTarefa", target = "tarefa", qualifiedByName = "mapTarefa")
-    Comentario toEntity(ComentarioDTO dto);
+    Comentario toEntity(ComentarioCreateDTO dto);
 
     @Named("mapUsuario")
     default Usuario mapUsuario(Integer idUsuario) {

@@ -29,10 +29,12 @@ public class Comentario {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_comentario_usuario"))
+    @NotNull(message = "O usuário não pode ser nulo")
     private Usuario usuario;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "tarefa_id", foreignKey = @ForeignKey(name = "fk_comentario_tarefa"))
+    @NotNull(message = "O ID da tarefa não pode ser nulo")
     private Tarefa tarefa;
 
 }
