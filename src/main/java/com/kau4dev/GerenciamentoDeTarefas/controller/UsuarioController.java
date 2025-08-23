@@ -1,7 +1,8 @@
 package com.kau4dev.GerenciamentoDeTarefas.controller;
 
 import com.kau4dev.GerenciamentoDeTarefas.business.UsuarioService;
-import com.kau4dev.GerenciamentoDeTarefas.dto.UsuarioDTO;
+import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioCreateDTO;
+import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -30,8 +31,8 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @PostMapping
-    public ResponseEntity<Void> criarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO){
-        usuarioService.salvarUsuario(usuarioDTO);
+    public ResponseEntity<Void> criarUsuario(@RequestBody @Valid UsuarioCreateDTO usuarioCreateDTO){
+        usuarioService.salvarUsuario(usuarioCreateDTO);
         return ResponseEntity.status(201).build();
     }
 
@@ -41,7 +42,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @GetMapping
-    public ResponseEntity<List<UsuarioDTO>> listarUsuarios(){
+    public ResponseEntity<List<UsuarioCreateDTO>> listarUsuarios(){
         return ResponseEntity.ok(usuarioService.listarUsuarios());
     }
 
@@ -52,7 +53,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @GetMapping("/{idUsuario}")
-    public ResponseEntity<UsuarioDTO> buscarUsuarioPorId(@PathVariable Integer idUsuario){
+    public ResponseEntity<UsuarioCreateDTO> buscarUsuarioPorId(@PathVariable Integer idUsuario){
         return ResponseEntity.ok(usuarioService.buscarUsuarioPorId(idUsuario));
     }
 
@@ -63,8 +64,8 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @PutMapping("/{idUsuario}")
-    public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable Integer idUsuario, @RequestBody @Valid UsuarioDTO usuarioDTO){
-        UsuarioDTO atualizado = usuarioService.atualizarUsuario(idUsuario, usuarioDTO);
+    public ResponseEntity<UsuarioUpdateDTO> atualizarUsuario(@PathVariable Integer idUsuario, @RequestBody @Valid UsuarioUpdateDTO usuarioUpdateDTO){
+        UsuarioUpdateDTO atualizado = usuarioService.atualizarUsuario(idUsuario, usuarioUpdateDTO);
         return ResponseEntity.ok(atualizado);
     }
 

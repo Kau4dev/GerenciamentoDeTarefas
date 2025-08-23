@@ -1,6 +1,7 @@
 package com.kau4dev.GerenciamentoDeTarefas.business;
 
-import com.kau4dev.GerenciamentoDeTarefas.dto.UsuarioDTO;
+import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioCreateDTO;
+import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioUpdateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.UsuarioRepository;
 import com.kau4dev.GerenciamentoDeTarefas.mapper.UsuarioMapper;
@@ -18,35 +19,35 @@ public class UsuarioService {
         this.mapper = mapper;
     }
 
-    public UsuarioDTO salvarUsuario(UsuarioDTO usuarioDTO) {
-        Usuario usuario = mapper.toEntity(usuarioDTO);
+    public UsuarioCreateDTO salvarUsuario(UsuarioCreateDTO usuarioCreateDTO) {
+        Usuario usuario = mapper.toEntity(usuarioCreateDTO);
         Usuario usuarioSalvo = repository.saveAndFlush(usuario);
         return mapper.toDTO(usuarioSalvo);
     }
 
-    public List<UsuarioDTO> listarUsuarios() {
+    public List<UsuarioCreateDTO> listarUsuarios() {
         List<Usuario> usuarios = repository.findAll();
         return usuarios.stream()
                 .map(mapper::toDTO)
                 .toList();
     }
 
-    public UsuarioDTO buscarUsuarioPorId(Integer idUsuario) {
+    public UsuarioCreateDTO buscarUsuarioPorId(Integer idUsuario) {
         Usuario usuario = repository.findById(idUsuario).orElseThrow(
                 () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
         );
         return mapper.toDTO(usuario);
     }
 
-    public UsuarioDTO atualizarUsuario(Integer idUsuario, UsuarioDTO usuarioDTO) {
+    public UsuarioUpdateDTO atualizarUsuario(Integer idUsuario, UsuarioUpdateDTO usuarioUpdateeDTO) {
         Usuario usuarioEntity = repository.findById(idUsuario).orElseThrow(
                 () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
         );
-        usuarioEntity.setNome(usuarioDTO.getNome() != null ? usuarioDTO.getNome() : usuarioEntity.getNome());
-        usuarioEntity.setEmail(usuarioDTO.getEmail() != null ? usuarioDTO.getEmail() : usuarioEntity.getEmail());
-        usuarioEntity.setSenha(usuarioDTO.getSenha() != null ? usuarioDTO.getSenha() : usuarioEntity.getSenha());
+        usuarioEntity.setNome(usuarioUpdateeDTO.getNome() != null ? usuarioUpdateeDTO.getNome() : usuarioEntity.getNome());
+        usuarioEntity.setEmail(usuarioUpdateeDTO.getEmail() != null ? usuarioUpdateeDTO.getEmail() : usuarioEntity.getEmail());
+        usuarioEntity.setSenha(usuarioUpdateeDTO.getSenha() != null ? usuarioUpdateeDTO.getSenha() : usuarioEntity.getSenha());
         Usuario usuarioAtualizado = repository.saveAndFlush(usuarioEntity);
-        return mapper.toDTO(usuarioAtualizado);
+        return mapper.toUpdateDTO(usuarioAtualizado);
     }
 
     public void deletarUsuario(Integer idUsuario) {

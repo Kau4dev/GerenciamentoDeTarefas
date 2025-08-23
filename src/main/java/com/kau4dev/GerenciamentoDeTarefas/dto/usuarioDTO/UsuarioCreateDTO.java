@@ -1,4 +1,4 @@
-    package com.kau4dev.GerenciamentoDeTarefas.dto;
+    package com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO;
 
     import jakarta.validation.constraints.Email;
     import jakarta.validation.constraints.NotBlank;
@@ -7,7 +7,7 @@
     import lombok.Data;
 
     @Data
-    public class UsuarioDTO {
+    public class  UsuarioCreateDTO {
 
         private Integer idUsuario;
 
