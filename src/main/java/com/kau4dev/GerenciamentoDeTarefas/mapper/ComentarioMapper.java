@@ -25,10 +25,6 @@ public interface ComentarioMapper {
     @Mapping(source = "usuario.nome", target = "nomeUsuario")
     ComentarioViewDTO toViewDTO(Comentario comentario);
 
-    @Mapping(source = "idUsuario", target = "usuario", qualifiedByName = "mapUsuario")
-    @Mapping(source = "idTarefa", target = "tarefa", qualifiedByName = "mapTarefa")
-    ComentarioViewDTO toViewDTO(ComentarioCreateDTO dto);
-
     @Named("mapUsuario")
     default Usuario mapUsuario(Integer idUsuario) {
         return idUsuario == null ? null : Usuario.builder().id(idUsuario).build();
