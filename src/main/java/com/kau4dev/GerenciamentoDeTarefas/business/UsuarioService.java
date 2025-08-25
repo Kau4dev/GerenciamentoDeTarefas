@@ -39,13 +39,11 @@ public class UsuarioService {
         return mapper.toDTO(usuario);
     }
 
-    public UsuarioUpdateDTO atualizarUsuario(Integer idUsuario, UsuarioUpdateDTO usuarioUpdateeDTO) {
+    public UsuarioUpdateDTO atualizarUsuario(Integer idUsuario, UsuarioUpdateDTO usuarioUpdateDTO) {
         Usuario usuarioEntity = repository.findById(idUsuario).orElseThrow(
                 () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
         );
-        usuarioEntity.setNome(usuarioUpdateeDTO.getNome() != null ? usuarioUpdateeDTO.getNome() : usuarioEntity.getNome());
-        usuarioEntity.setEmail(usuarioUpdateeDTO.getEmail() != null ? usuarioUpdateeDTO.getEmail() : usuarioEntity.getEmail());
-        usuarioEntity.setSenha(usuarioUpdateeDTO.getSenha() != null ? usuarioUpdateeDTO.getSenha() : usuarioEntity.getSenha());
+        mapper.updateEntityFromDTO(usuarioUpdateDTO, usuarioEntity);
         Usuario usuarioAtualizado = repository.saveAndFlush(usuarioEntity);
         return mapper.toUpdateDTO(usuarioAtualizado);
     }
