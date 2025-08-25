@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 @Data
 public class TarefaUpdateDTO {
 
-    private Integer idTarefa;
-
     @Size(max = 100, message = "O título não pode ter mais de 100 caracteres")
     @Pattern(regexp = "^[A-ZÀ-Ý][a-zA-ZÀ-ÿ\\s]*$",
             message = "O título deve começar com letra maiúscula e conter apenas letras e espaços")
@@ -24,12 +22,7 @@ public class TarefaUpdateDTO {
 
     private StatusTarefa status;
 
-    private Integer idUsuario;
-
-    private LocalDateTime dataCriacao;
-
     private LocalDateTime dataConclusao;
-
 
 
 }
