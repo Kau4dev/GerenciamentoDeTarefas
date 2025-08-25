@@ -3,6 +3,7 @@ package com.kau4dev.GerenciamentoDeTarefas.controller;
 import com.kau4dev.GerenciamentoDeTarefas.business.TarefaService;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaCreateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaUpdateDTO;
+import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaViewDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -42,8 +43,8 @@ public class TarefaController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @GetMapping
-    public ResponseEntity<List<TarefaCreateDTO>> listarTarefa(@PathVariable Integer idUsuario){
-        List<TarefaCreateDTO> tarefas = tarefaService.listarTarefas(idUsuario);
+    public ResponseEntity<List<TarefaViewDTO>> listarTarefa(@PathVariable Integer idUsuario){
+        List<TarefaViewDTO> tarefas = tarefaService.listarTarefas(idUsuario);
         return ResponseEntity.ok(tarefas);
     }
 
@@ -54,8 +55,8 @@ public class TarefaController {
             @ApiResponse(responseCode = "404", description = "Tarefa ou usuário não encontrado")
     })
     @GetMapping("/{idTarefa}")
-    public ResponseEntity<TarefaCreateDTO> buscarTarefaPorId(@PathVariable Integer idUsuario, @PathVariable Integer idTarefa){
-        TarefaCreateDTO tarefa = tarefaService.buscarTarefaPorId(idUsuario, idTarefa);
+    public ResponseEntity<TarefaViewDTO> buscarTarefaPorId(@PathVariable Integer idUsuario, @PathVariable Integer idTarefa){
+        TarefaViewDTO tarefa = tarefaService.buscarTarefaPorId(idUsuario, idTarefa);
         return ResponseEntity.ok(tarefa);
     }
 
@@ -66,7 +67,7 @@ public class TarefaController {
             @ApiResponse(responseCode = "404", description = "Tarefa ou usuário não encontrado")
     })
     @PutMapping("/{idTarefa}")
-    public ResponseEntity<TarefaUpdateDTO> atualizarTarefa(@PathVariable Integer idUsuario, @PathVariable Integer idTarefa, @RequestBody @Valid TarefaUpdateDTO tarefaupdateDTO){
+    public ResponseEntity<TarefaViewDTO> atualizarTarefa(@PathVariable Integer idUsuario, @PathVariable Integer idTarefa, @RequestBody @Valid TarefaUpdateDTO tarefaupdateDTO){
         return ResponseEntity.ok(tarefaService.atualizarTarefa(idUsuario, idTarefa, tarefaupdateDTO));
     }
 
@@ -77,7 +78,7 @@ public class TarefaController {
             @ApiResponse(responseCode = "404", description = "Tarefa ou usuário não encontrado")
     })
     @PatchMapping("/{idTarefa}/status")
-    public ResponseEntity<TarefaUpdateDTO> alteraStatusTarefa(@PathVariable Integer idUsuario, @PathVariable Integer idTarefa, @RequestBody @Valid TarefaUpdateDTO tarefaUpdateDTO){
+    public ResponseEntity<TarefaViewDTO> alteraStatusTarefa(@PathVariable Integer idUsuario, @PathVariable Integer idTarefa, @RequestBody @Valid TarefaUpdateDTO tarefaUpdateDTO){
         return ResponseEntity.ok(tarefaService.alteraStatusTarefa(idUsuario, idTarefa, tarefaUpdateDTO));
     }
 
