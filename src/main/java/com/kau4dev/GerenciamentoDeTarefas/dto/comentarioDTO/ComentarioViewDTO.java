@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 @Data
 public class ComentarioViewDTO {
 
+    private Integer idComentario;
+
     private String Texto;
 
     private String NomeUsuario;

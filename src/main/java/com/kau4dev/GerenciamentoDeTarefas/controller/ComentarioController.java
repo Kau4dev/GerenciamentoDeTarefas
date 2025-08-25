@@ -2,6 +2,7 @@ package com.kau4dev.GerenciamentoDeTarefas.controller;
 
 import com.kau4dev.GerenciamentoDeTarefas.business.ComentarioService;
 import com.kau4dev.GerenciamentoDeTarefas.dto.comentarioDTO.ComentarioCreateDTO;
+import com.kau4dev.GerenciamentoDeTarefas.dto.comentarioDTO.ComentarioViewDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("usuario/{idUsuario}/tarefas/{idTarefa}/comentarios")
+@RequestMapping("usuarios/{idUsuario}/tarefas/{idTarefa}/comentarios")
 @RequiredArgsConstructor
 public class ComentarioController {
 
@@ -41,8 +42,8 @@ public class ComentarioController {
             @ApiResponse(responseCode = "404", description = "Usuário ou tarefa não encontrado")
     })
     @GetMapping
-    public ResponseEntity<List<ComentarioCreateDTO>> listarComentarios(@PathVariable("idUsuario") Integer idUsuario, @PathVariable("idTarefa") Integer idTarefa){
-        List<ComentarioCreateDTO> comentarios = comentarioService.listarComentarios(idTarefa);
+    public ResponseEntity<List<ComentarioViewDTO>> listarComentarios(@PathVariable("idUsuario") Integer idUsuario, @PathVariable("idTarefa") Integer idTarefa){
+        List<ComentarioViewDTO> comentarios = comentarioService.listarComentarios(idTarefa);
         return ResponseEntity.ok(comentarios);
 
     }

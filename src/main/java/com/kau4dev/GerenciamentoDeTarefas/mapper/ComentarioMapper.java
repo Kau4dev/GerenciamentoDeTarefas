@@ -12,17 +12,13 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface ComentarioMapper {
 
-    @Mapping(source = "id", target = "idComentario")
-    @Mapping(source = "usuario.id", target = "idUsuario")
-    @Mapping(source = "tarefa.id", target = "idTarefa")
-    ComentarioCreateDTO toDTO(Comentario comentario);
-
     @Mapping(source = "idComentario", target = "id")
     @Mapping(source = "idUsuario", target = "usuario", qualifiedByName = "mapUsuario")
     @Mapping(source = "idTarefa", target = "tarefa", qualifiedByName = "mapTarefa")
     Comentario toEntity(ComentarioCreateDTO dto);
 
     @Mapping(source = "usuario.nome", target = "nomeUsuario")
+    @Mapping(source = "id", target = "idComentario")
     ComentarioViewDTO toViewDTO(Comentario comentario);
 
     @Named("mapUsuario")

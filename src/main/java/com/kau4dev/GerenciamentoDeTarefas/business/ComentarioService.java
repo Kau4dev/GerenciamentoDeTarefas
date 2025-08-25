@@ -1,6 +1,7 @@
 package com.kau4dev.GerenciamentoDeTarefas.business;
 
 import com.kau4dev.GerenciamentoDeTarefas.dto.comentarioDTO.ComentarioCreateDTO;
+import com.kau4dev.GerenciamentoDeTarefas.dto.comentarioDTO.ComentarioViewDTO;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Comentario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Tarefa;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
@@ -27,7 +28,7 @@ public class ComentarioService {
         this.tarefaRepository = tarefaRepository;
         this.usuarioRepository = usuarioRepository;
 }
-    public ComentarioCreateDTO criarComentario(Integer idTarefa, Integer idUsuario, ComentarioCreateDTO comentarioCreateDTO) {
+    public ComentarioViewDTO criarComentario(Integer idTarefa, Integer idUsuario, ComentarioCreateDTO comentarioCreateDTO) {
         Comentario comentario = comentarioMapper.toEntity(comentarioCreateDTO);
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(
                 () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
@@ -39,14 +40,14 @@ public class ComentarioService {
         comentario.setTarefa(tarefa);
         comentario.setDataCriacao(LocalDateTime.now());
         Comentario comentarioSalvo = repository.saveAndFlush(comentario);
-        return comentarioMapper.toDTO(comentarioSalvo);
+        return comentarioMapper.toViewDTO(comentarioSalvo);
 
     }
 
-    public List<ComentarioCreateDTO> listarComentarios(Integer idTarefa) {
+    public List<ComentarioViewDTO> listarComentarios(Integer idTarefa) {
         List<Comentario> comentarios = repository.findByTarefaId(idTarefa);
         return comentarios.stream()
-                .map(comentarioMapper::toDTO)
+                .map(comentarioMapper::toViewDTO)
                 .toList();
     }
 
