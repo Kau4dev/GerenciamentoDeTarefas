@@ -3,6 +3,7 @@ package com.kau4dev.GerenciamentoDeTarefas.controller;
 import com.kau4dev.GerenciamentoDeTarefas.business.UsuarioService;
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioCreateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioUpdateDTO;
+import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioViewDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -42,7 +43,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @GetMapping
-    public ResponseEntity<List<UsuarioCreateDTO>> listarUsuarios(){
+    public ResponseEntity<List<UsuarioViewDTO>> listarUsuarios(){
         return ResponseEntity.ok(usuarioService.listarUsuarios());
     }
 
@@ -53,7 +54,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @GetMapping("/{idUsuario}")
-    public ResponseEntity<UsuarioCreateDTO> buscarUsuarioPorId(@PathVariable Integer idUsuario){
+    public ResponseEntity<UsuarioViewDTO> buscarUsuarioPorId(@PathVariable Integer idUsuario){
         return ResponseEntity.ok(usuarioService.buscarUsuarioPorId(idUsuario));
     }
 
@@ -64,8 +65,8 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @PutMapping("/{idUsuario}")
-    public ResponseEntity<UsuarioUpdateDTO> atualizarUsuario(@PathVariable Integer idUsuario, @RequestBody @Valid UsuarioUpdateDTO usuarioUpdateDTO){
-        UsuarioUpdateDTO atualizado = usuarioService.atualizarUsuario(idUsuario, usuarioUpdateDTO);
+    public ResponseEntity<UsuarioViewDTO> atualizarUsuario(@PathVariable Integer idUsuario, @RequestBody @Valid UsuarioUpdateDTO usuarioUpdateDTO){
+        UsuarioViewDTO atualizado = usuarioService.atualizarUsuario(idUsuario, usuarioUpdateDTO);
         return ResponseEntity.ok(atualizado);
     }
 

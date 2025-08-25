@@ -2,6 +2,7 @@ package com.kau4dev.GerenciamentoDeTarefas.business;
 
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioCreateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioUpdateDTO;
+import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioViewDTO;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.UsuarioRepository;
 import com.kau4dev.GerenciamentoDeTarefas.mapper.UsuarioMapper;
@@ -19,33 +20,33 @@ public class UsuarioService {
         this.mapper = mapper;
     }
 
-    public UsuarioCreateDTO salvarUsuario(UsuarioCreateDTO usuarioCreateDTO) {
+    public UsuarioViewDTO salvarUsuario(UsuarioCreateDTO usuarioCreateDTO) {
         Usuario usuario = mapper.toEntity(usuarioCreateDTO);
         Usuario usuarioSalvo = repository.saveAndFlush(usuario);
-        return mapper.toDTO(usuarioSalvo);
+        return mapper.toViewDTO(usuarioSalvo);
     }
 
-    public List<UsuarioCreateDTO> listarUsuarios() {
+    public List<UsuarioViewDTO> listarUsuarios() {
         List<Usuario> usuarios = repository.findAll();
         return usuarios.stream()
-                .map(mapper::toDTO)
+                .map(mapper::toViewDTO)
                 .toList();
     }
 
-    public UsuarioCreateDTO buscarUsuarioPorId(Integer idUsuario) {
+    public UsuarioViewDTO buscarUsuarioPorId(Integer idUsuario) {
         Usuario usuario = repository.findById(idUsuario).orElseThrow(
                 () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
         );
-        return mapper.toDTO(usuario);
+        return mapper.toViewDTO(usuario);
     }
 
-    public UsuarioUpdateDTO atualizarUsuario(Integer idUsuario, UsuarioUpdateDTO usuarioUpdateDTO) {
+    public UsuarioViewDTO atualizarUsuario(Integer idUsuario, UsuarioUpdateDTO usuarioUpdateDTO) {
         Usuario usuarioEntity = repository.findById(idUsuario).orElseThrow(
                 () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
         );
         mapper.updateEntityFromDTO(usuarioUpdateDTO, usuarioEntity);
         Usuario usuarioAtualizado = repository.saveAndFlush(usuarioEntity);
-        return mapper.toUpdateDTO(usuarioAtualizado);
+        return mapper.toViewDTO(usuarioAtualizado);
     }
 
     public void deletarUsuario(Integer idUsuario) {
