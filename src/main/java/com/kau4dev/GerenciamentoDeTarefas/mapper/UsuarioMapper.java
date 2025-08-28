@@ -19,7 +19,6 @@ public interface UsuarioMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "email", ignore = true)
     void updateEntityFromDTO(UsuarioUpdateDTO dto, @MappingTarget Usuario entity);
 
 }

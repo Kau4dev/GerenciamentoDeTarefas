@@ -22,6 +22,9 @@ public class UsuarioService {
 
     public UsuarioViewDTO salvarUsuario(UsuarioCreateDTO usuarioCreateDTO) {
         Usuario usuario = mapper.toEntity(usuarioCreateDTO);
+        if (repository.existsByEmail(usuario.getEmail())) {
+            throw new RuntimeException("Já existe um usuário cadastrado com o email: " + usuario.getEmail());
+        }
         Usuario usuarioSalvo = repository.saveAndFlush(usuario);
         return mapper.toViewDTO(usuarioSalvo);
     }
