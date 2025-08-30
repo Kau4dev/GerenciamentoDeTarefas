@@ -29,14 +29,14 @@ public class ComentarioService {
         this.usuarioRepository = usuarioRepository;
 }
     public ComentarioViewDTO criarComentario(Integer idTarefa, Integer idUsuario, ComentarioCreateDTO comentarioCreateDTO) {
-        Comentario comentario = comentarioMapper.toEntity(comentarioCreateDTO);
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(
                 () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
         );
-        comentario.setUsuario(usuario);
         Tarefa tarefa = tarefaRepository.findById(idTarefa).orElseThrow(
                 () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
         );
+        Comentario comentario = comentarioMapper.toEntity(comentarioCreateDTO);
+        comentario.setUsuario(usuario);
         comentario.setTarefa(tarefa);
         comentario.setDataCriacao(LocalDateTime.now());
         Comentario comentarioSalvo = repository.saveAndFlush(comentario);
@@ -45,6 +45,9 @@ public class ComentarioService {
     }
 
     public List<ComentarioViewDTO> listarComentarios(Integer idTarefa) {
+        tarefaRepository.findById(idTarefa).orElseThrow(
+                () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
+        );
         List<Comentario> comentarios = repository.findByTarefaId(idTarefa);
         return comentarios.stream()
                 .map(comentarioMapper::toViewDTO)
