@@ -90,6 +90,13 @@ class TarefaServiceTest {
         }
 
         @Test
+        @DisplayName("Deve lançar exceção quando DTO for nulo")
+        void deveLancarExcecaoQuandoDTOForNulo() {
+            RuntimeException exception = assertThrows(RuntimeException.class, () -> tarefaService.criarTarefa(1, null));
+            assertEquals("Falha ao converter DTO para entidade Tarefa", exception.getMessage());
+        }
+
+        @Test
         @DisplayName("Deve lançar exceção quando usuário não for encontrado")
         void deveLancarExcecaoQuandoUsuarioNaoForEncontrado() {
             var tarefaCreateDTO = new TarefaCreateDTO();
@@ -98,13 +105,59 @@ class TarefaServiceTest {
             tarefaCreateDTO.setTitulo("Título da Tarefa");
             tarefaCreateDTO.setStatus(StatusTarefa.valueOf("PENDENTE"));
 
-            // Mock para evitar exceção de conversão
             doReturn(new Tarefa()).when(tarefaMapper).toEntity(tarefaCreateDTO);
             doReturn(Optional.empty()).when(usuarioRepository).findById(1);
 
             RuntimeException exception = assertThrows(RuntimeException.class, () -> tarefaService.criarTarefa(1, tarefaCreateDTO));
 
             assertEquals("Usuário não encontrado com o id: 1", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Deve receber um status nulo e passar como PENDENTE")
+        void deveReceberUmStatusNuloEPassarComoPendente() {
+
+            var usuarioCreateDTO = new UsuarioCreateDTO();
+            usuarioCreateDTO.setNome("Kauã");
+            usuarioCreateDTO.setEmail("kaua@gmail.com");
+            usuarioCreateDTO.setSenha("S123456");
+
+            var usuarioEntity = Usuario.builder()
+                    .id(1)
+                    .nome("Kauã")
+                    .email("kaua@gmail.com")
+                    .senha("S123456")
+                    .build();
+
+            var tarefaCreateDTO = new TarefaCreateDTO();
+            tarefaCreateDTO.setIdTarefa(1);
+            tarefaCreateDTO.setIdUsuario(1);
+            tarefaCreateDTO.setTitulo("Título da Tarefa");
+            tarefaCreateDTO.setStatus(null);
+
+            var tarefaEntity = Tarefa.builder()
+                    .id(1)
+                    .titulo("Título da Tarefa")
+                    .status(StatusTarefa.PENDENTE)
+                    .usuario(usuarioEntity)
+                    .build();
+
+            var tarefaViewDTO = new TarefaViewDTO();
+            tarefaViewDTO.setIdTarefa(1);
+            tarefaViewDTO.setTitulo("Título da Tarefa");
+            tarefaViewDTO.setStatus(StatusTarefa.PENDENTE);
+
+            doReturn(Optional.of(usuarioEntity)).when(usuarioRepository).findById(1);
+            doReturn(tarefaEntity).when(tarefaMapper).toEntity(tarefaCreateDTO);
+            doReturn(tarefaEntity).when(tarefaRepository).saveAndFlush(tarefaEntity);
+            doReturn(tarefaViewDTO).when(tarefaMapper).toViewDTO(tarefaEntity);
+
+            var output = tarefaService.criarTarefa(1, tarefaCreateDTO);
+
+            assertNotNull(output);
+            assertEquals("Título da Tarefa", output.getTitulo());
+            assertEquals(StatusTarefa.PENDENTE, output.getStatus());
+
         }
 
         @Test
@@ -151,70 +204,6 @@ class TarefaServiceTest {
 
     }
 
-    @Nested
-    class buscarTarefaPorId {
-
-
-        @Test
-        @DisplayName("Deve buscar uma tarefa por ID com sucesso")
-        void deveBuscarTarefaPorIdComSucesso() {
-            var usuarioCreateDTO = new UsuarioCreateDTO();
-            usuarioCreateDTO.setIdUsuario(1);
-            usuarioCreateDTO.setNome("Kauã");
-            usuarioCreateDTO.setEmail("kaua@gmail.com");
-            usuarioCreateDTO.setSenha("S123456");
-
-            var usuarioEntity = Usuario.builder()
-                    .id(1)
-                    .nome("Kauã")
-                    .email("kaua@gmail.com")
-                    .senha("S123456")
-                    .build();
-
-            var tarefaCreateDTO = new TarefaCreateDTO();
-            tarefaCreateDTO.setIdTarefa(1);
-            tarefaCreateDTO.setIdUsuario(1);
-            tarefaCreateDTO.setTitulo("Título da Tarefa");
-            tarefaCreateDTO.setStatus(StatusTarefa.valueOf("PENDENTE"));
-
-            var tarefaEntity = Tarefa.builder()
-                    .id(1)
-                    .titulo("Título da Tarefa")
-                    .status(StatusTarefa.PENDENTE)
-                    .usuario(usuarioEntity)
-                    .build();
-
-            var tarefaViewDTO = new TarefaViewDTO();
-            tarefaViewDTO.setIdTarefa(1);
-            tarefaViewDTO.setTitulo("Título da Tarefa");
-            tarefaViewDTO.setStatus(StatusTarefa.PENDENTE);
-
-            doReturn(Optional.of(tarefaEntity)).when(tarefaRepository).findByIdAndUsuarioId(1, 1);
-            doReturn(tarefaViewDTO).when(tarefaMapper).toViewDTO(tarefaEntity);
-
-            var output = tarefaService.buscarTarefaPorId(1, 1);
-
-            assertNotNull(output);
-            assertEquals("Título da Tarefa", output.getTitulo());
-            assertEquals(StatusTarefa.PENDENTE, output.getStatus());
-
-
-        }
-
-        @Test
-        @DisplayName("Deve lançar exceção ao tentar buscar tarefa inexistente")
-        void deveLancarExcecaoAoTentarBuscarTarefaInexistente() {
-            // Corrigindo a ordem dos parâmetros para corresponder à implementação
-            doReturn(Optional.empty()).when(tarefaRepository).findByIdAndUsuarioId(99, 1);
-
-            RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-                tarefaService.buscarTarefaPorId(1, 99);
-            });
-
-            assertEquals("Tarefa não encontrada com o id: 99", exception.getMessage());
-        }
-
-    }
     @Nested
     class listarTarefasPorUsuario {
 
@@ -271,6 +260,15 @@ class TarefaServiceTest {
         }
 
         @Test
+        @DisplayName("Deve laçar exceção se usúario for nulo")
+        void deveLancarExcecaoSeUsuarioForNulo() {
+            RuntimeException exception = assertThrows(RuntimeException.class, () -> tarefaService.listarTarefas(1));
+            assertEquals("Usuário não encontrado com o id: 1", exception.getMessage());
+        }
+
+
+
+        @Test
         @DisplayName("Deve lançar exceção ao tentar listar tarefas de usuário inexistente")
         void deveLancarExcecaoAoListarTarefasDeUsuarioInexistente() {
 
@@ -282,6 +280,78 @@ class TarefaServiceTest {
 
             assertEquals("Usuário não encontrado com o id: 99", exception.getMessage());
         }
+
+        @Test
+        @DisplayName("Deve lançar exceção se idUsuario for nulo ao listar tarefas")
+        void deveLancarExcecaoSeIdUsuarioForNuloAoListarTarefas() {
+            RuntimeException exception = assertThrows(RuntimeException.class, () -> tarefaService.listarTarefas(null));
+            assertEquals("ID do usuário não pode ser nulo", exception.getMessage());
+        }
+    }
+
+    @Nested
+    class buscarTarefaPorId {
+
+
+        @Test
+        @DisplayName("Deve buscar uma tarefa por ID com sucesso")
+        void deveBuscarTarefaPorIdComSucesso() {
+            var usuarioCreateDTO = new UsuarioCreateDTO();
+            usuarioCreateDTO.setIdUsuario(1);
+            usuarioCreateDTO.setNome("Kauã");
+            usuarioCreateDTO.setEmail("kaua@gmail.com");
+            usuarioCreateDTO.setSenha("S123456");
+
+            var usuarioEntity = Usuario.builder()
+                    .id(1)
+                    .nome("Kauã")
+                    .email("kaua@gmail.com")
+                    .senha("S123456")
+                    .build();
+
+            var tarefaCreateDTO = new TarefaCreateDTO();
+            tarefaCreateDTO.setIdTarefa(1);
+            tarefaCreateDTO.setIdUsuario(1);
+            tarefaCreateDTO.setTitulo("Título da Tarefa");
+            tarefaCreateDTO.setStatus(StatusTarefa.valueOf("PENDENTE"));
+
+            var tarefaEntity = Tarefa.builder()
+                    .id(1)
+                    .titulo("Título da Tarefa")
+                    .status(StatusTarefa.PENDENTE)
+                    .usuario(usuarioEntity)
+                    .build();
+
+            var tarefaViewDTO = new TarefaViewDTO();
+            tarefaViewDTO.setIdTarefa(1);
+            tarefaViewDTO.setTitulo("Título da Tarefa");
+            tarefaViewDTO.setStatus(StatusTarefa.PENDENTE);
+
+            doReturn(Optional.of(tarefaEntity)).when(tarefaRepository).findByIdAndUsuarioId(1, 1);
+            doReturn(tarefaViewDTO).when(tarefaMapper).toViewDTO(tarefaEntity);
+
+            var output = tarefaService.buscarTarefaPorId(1, 1);
+
+            assertNotNull(output);
+            assertEquals("Título da Tarefa", output.getTitulo());
+            assertEquals(StatusTarefa.PENDENTE, output.getStatus());
+
+
+        }
+
+        @Test
+        @DisplayName("Deve lançar exceção ao tentar buscar tarefa inexistente")
+        void deveLancarExcecaoAoTentarBuscarTarefaInexistente() {
+
+            doReturn(Optional.empty()).when(tarefaRepository).findByIdAndUsuarioId(99, 1);
+
+            RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+                tarefaService.buscarTarefaPorId(1, 99);
+            });
+
+            assertEquals("Tarefa não encontrada com o id: 99", exception.getMessage());
+        }
+
     }
 
     @Nested
@@ -290,7 +360,7 @@ class TarefaServiceTest {
         @Test
         @DisplayName("Deve atualizar uma tarefa com sucesso")
         void deveAtualizarUmaTarefaComSucesso() {
-            // Arrange
+
             int usuarioId = 1;
             int tarefaId = 1;
 
@@ -329,13 +399,27 @@ class TarefaServiceTest {
             doReturn(tarefaEntity).when(tarefaRepository).saveAndFlush(any(Tarefa.class));
             doReturn(tarefaViewDTOAtualizada).when(tarefaMapper).toViewDTO(tarefaEntity);
 
-            // Act
             var output = tarefaService.atualizarTarefa(usuarioId, tarefaId, tarefaUpdateDTO);
 
-            // Assert
             assertNotNull(output);
             assertEquals("Título da Tarefa Atualizada", output.getTitulo());
             assertEquals(StatusTarefa.PENDENTE, output.getStatus());
+        }
+
+        @Test
+        @DisplayName("Deve lançar exceção se usuário não for encontrado")
+        void deveLancarExcecaoSeUsuarioNaoForEncontrado() {
+            var tarefaUpdateDTO = new TarefaUpdateDTO();
+            tarefaUpdateDTO.setTitulo("Título da Tarefa Atualizada");
+            tarefaUpdateDTO.setStatus(StatusTarefa.PENDENTE);
+
+            doReturn(Optional.empty()).when(usuarioRepository).findById(1);
+
+            RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+                tarefaService.atualizarTarefa(1, 1, tarefaUpdateDTO);
+            });
+
+            assertEquals("Usuário não encontrado com o id: 1", exception.getMessage());
         }
 
         @Test
@@ -406,6 +490,21 @@ class TarefaServiceTest {
         }
 
         @Test
+        @DisplayName("Deve lançar exceção se usuário não for encontrado")
+        void deveLancarExcecaoSeUsuarioNaoForEncontrado() {
+            var tarefaUpdateDTO = new TarefaUpdateDTO();
+            tarefaUpdateDTO.setStatus(StatusTarefa.PENDENTE);
+
+            doReturn(Optional.empty()).when(usuarioRepository).findById(1);
+
+            RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+                tarefaService.atualizarTarefa(1, 1, tarefaUpdateDTO);
+            });
+
+            assertEquals("Usuário não encontrado com o id: 1", exception.getMessage());
+        }
+
+        @Test
         @DisplayName("Deve salvar data de conclusão ao alterar status para CONCLUIDA")
         void deveSalvarDataDeConclusaoAoAlterarStatusParaConcluida() {
             int usuarioId = 1;
@@ -470,6 +569,22 @@ class TarefaServiceTest {
             assertEquals("Tarefa não encontrada com o id: 99", exception.getMessage());
         }
 
+        @Test
+        @DisplayName("Deve lançar exceção se status for nulo ao alterar status da tarefa")
+        void deveLancarExcecaoSeStatusForNuloAoAlterarStatusTarefa() {
+            int usuarioId = 1;
+            int tarefaId = 1;
+            var tarefaUpdateDTO = new TarefaUpdateDTO();
+            tarefaUpdateDTO.setStatus(null);
+            doReturn(Optional.of(Usuario.builder().id(usuarioId).build())).when(usuarioRepository).findById(usuarioId);
+            doReturn(Optional.of(Tarefa.builder().id(tarefaId).usuario(Usuario.builder().id(usuarioId).build()).build()))
+                    .when(tarefaRepository).findByIdAndUsuarioId(tarefaId, usuarioId);
+            RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+                tarefaService.alteraStatusTarefa(usuarioId, tarefaId, tarefaUpdateDTO);
+            });
+            assertEquals("Status inválido ou não fornecido", exception.getMessage());
+        }
+
     }
 
     @Nested
@@ -501,6 +616,18 @@ class TarefaServiceTest {
 
             assertDoesNotThrow(() -> tarefaService.deletarTarefa(usuarioId, tarefaId));
             verify(tarefaRepository, times(1)).delete(tarefaEntity);
+        }
+
+        @Test
+        @DisplayName("Deve lançar exceção se usuário não for encontrado")
+        void deveLancarExcecaoSeUsuarioNaoForEncontrado() {
+            doReturn(Optional.empty()).when(usuarioRepository).findById(1);
+
+            RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+                tarefaService.deletarTarefa(1, 1);
+            });
+
+            assertEquals("Usuário não encontrado com o id: 1", exception.getMessage());
         }
 
         @Test
