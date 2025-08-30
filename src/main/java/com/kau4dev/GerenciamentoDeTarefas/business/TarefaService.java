@@ -29,17 +29,29 @@ public class TarefaService {
 
     public TarefaViewDTO criarTarefa(Integer idUsuario, TarefaCreateDTO tarefaCreateDTO) {
         Tarefa tarefa = mapper.toEntity(tarefaCreateDTO);
+        if (tarefa == null) {
+            throw new RuntimeException("Falha ao converter DTO para entidade Tarefa");
+        }
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(
                 () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
         );
         tarefa.setUsuario(usuario);
         tarefa.setDataCriacao(LocalDateTime.now());
+        if (tarefa.getStatus() == null) {
+            tarefa.setStatus(StatusTarefa.PENDENTE);
+        }
         Tarefa tarefaSalva = repository.saveAndFlush(tarefa);
         return mapper.toViewDTO(tarefaSalva);
     }
 
-    public List<TarefaViewDTO> listarTarefas(Integer idusuario) {
-        List<Tarefa> tarefas = repository.findByUsuarioId(idusuario);
+    public List<TarefaViewDTO> listarTarefas(Integer idUsuario) {
+        if (idUsuario == null) {
+            throw new RuntimeException("ID do usuário não pode ser nulo");
+        }
+        usuarioRepository.findById(idUsuario).orElseThrow((
+                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+        ));
+        List<Tarefa> tarefas = repository.findByUsuarioId(idUsuario);
         return tarefas.stream()
                 .map(mapper::toViewDTO)
                 .toList();
@@ -53,6 +65,9 @@ public class TarefaService {
     }
 
     public TarefaViewDTO atualizarTarefa(Integer idUsuario, Integer idTarefa, TarefaUpdateDTO tarefaupdateDTO) {
+        usuarioRepository.findById(idUsuario).orElseThrow(
+                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+        );
         Tarefa tarefaEntity = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
                 () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
         );
@@ -63,6 +78,9 @@ public class TarefaService {
     }
 
     public TarefaViewDTO alteraStatusTarefa(Integer idUsuario, Integer idTarefa, TarefaUpdateDTO tarefaUpdateDTO) {
+        usuarioRepository.findById(idUsuario).orElseThrow(
+                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+        );
         Tarefa tarefaEntity = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
                 () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
         );
@@ -82,6 +100,9 @@ public class TarefaService {
     }
 
     public void deletarTarefa(Integer idUsuario, Integer idTarefa) {
+        usuarioRepository.findById(idUsuario).orElseThrow(
+                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+        );
         Tarefa tarefa = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
                 () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
         );
