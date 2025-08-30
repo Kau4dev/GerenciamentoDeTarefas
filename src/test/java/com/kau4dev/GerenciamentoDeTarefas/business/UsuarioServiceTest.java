@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
@@ -272,8 +273,7 @@ class UsuarioServiceTest {
             usuarioViewDTO.setEmail("kaua@gmail.com");
 
             doReturn(Optional.of(usuarioEntity)).when(usuarioRepository).findById(1);
-            // Simula o updateEntityFromDTO atualizando os campos
-            org.mockito.Mockito.doAnswer(invocation -> {
+            doAnswer(invocation -> {
                 UsuarioUpdateDTO dto = invocation.getArgument(0);
                 Usuario entity = invocation.getArgument(1);
                 entity.setNome(dto.getNome());
@@ -307,6 +307,7 @@ class UsuarioServiceTest {
 
     @Nested
     class RemoverUsuario {
+
         @Test
         @DisplayName("Deve remover usuário com sucesso")
         void DeveRemoverUsuarioComSucesso() {
