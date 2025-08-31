@@ -4,15 +4,21 @@ services:
   postgres:
     image: postgres:latest
     container_name: postgres
-
     ports:
       - "5432:5432"
-
     environment:
-        - POSTGRES_USER=${DB_USER}
-        - POSTGRES_PASSWORD=${DB_PASSWORD}
-        - POSTGRES_DB=gerenciador_tarefas
-    #volumes:
-    #  - ./data/postgres:/var/lib/postgresql/data
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=gerenciador_tarefas
 
-
+  backend:
+    build: .
+    container_name: backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/gerenciador_tarefas
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      - postgres
