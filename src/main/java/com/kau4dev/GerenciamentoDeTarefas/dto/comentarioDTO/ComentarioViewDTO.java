@@ -9,9 +9,9 @@ public class ComentarioViewDTO {
 
     private Integer idComentario;
 
-    private String Texto;
+    private String texto;
 
-    private String NomeUsuario;
+    private String nomeUsuario;
 
     private LocalDateTime dataCriacao;
 
