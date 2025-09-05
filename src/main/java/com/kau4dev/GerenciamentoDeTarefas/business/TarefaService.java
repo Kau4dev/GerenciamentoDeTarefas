@@ -3,6 +3,11 @@ package com.kau4dev.GerenciamentoDeTarefas.business;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaCreateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaUpdateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaViewDTO;
+import com.kau4dev.GerenciamentoDeTarefas.exception.TarefaException.IdTarefaNaoEncontradoException;
+import com.kau4dev.GerenciamentoDeTarefas.exception.TarefaException.StatusInvalidoException;
+import com.kau4dev.GerenciamentoDeTarefas.exception.TarefaException.TarefaNaoPodeSerNuloException;
+import com.kau4dev.GerenciamentoDeTarefas.exception.UsuarioException.IdUsuarioNaoEncontradoException;
+import com.kau4dev.GerenciamentoDeTarefas.exception.UsuarioException.UsuarioNaoPodeSerNuloException;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Tarefa;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.TarefaRepository;
@@ -27,13 +32,13 @@ public class TarefaService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public TarefaViewDTO criarTarefa(Integer idUsuario, TarefaCreateDTO tarefaCreateDTO) {
+    public TarefaViewDTO criarTarefa(Integer idUsuario, TarefaCreateDTO tarefaCreateDTO) throws TarefaNaoPodeSerNuloException {
         Tarefa tarefa = mapper.toEntity(tarefaCreateDTO);
         if (tarefa == null) {
-            throw new RuntimeException("Falha ao converter DTO para entidade Tarefa");
+            throw new TarefaNaoPodeSerNuloException("Falha ao converter DTO para entidade Tarefa");
         }
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+                () -> new IdUsuarioNaoEncontradoException("Usuário não encontrado com o id: " + idUsuario)
         );
         tarefa.setUsuario(usuario);
         tarefa.setDataCriacao(LocalDateTime.now());
@@ -46,10 +51,10 @@ public class TarefaService {
 
     public List<TarefaViewDTO> listarTarefas(Integer idUsuario) {
         if (idUsuario == null) {
-            throw new RuntimeException("ID do usuário não pode ser nulo");
+            throw new UsuarioNaoPodeSerNuloException("ID do usuário não pode ser nulo");
         }
         usuarioRepository.findById(idUsuario).orElseThrow((
-                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+                () -> new IdUsuarioNaoEncontradoException("Usuário não encontrado com o id: " + idUsuario)
         ));
         List<Tarefa> tarefas = repository.findByUsuarioId(idUsuario);
         return tarefas.stream()
@@ -59,17 +64,17 @@ public class TarefaService {
 
     public TarefaViewDTO buscarTarefaPorId(Integer idUsuario, Integer idTarefa) {
         Tarefa tarefa = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
-                () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
+                () -> new IdTarefaNaoEncontradoException("Tarefa não encontrada com o id: " + idTarefa)
         );
         return mapper.toViewDTO(tarefa);
     }
 
     public TarefaViewDTO atualizarTarefa(Integer idUsuario, Integer idTarefa, TarefaUpdateDTO tarefaupdateDTO) {
         usuarioRepository.findById(idUsuario).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+                () -> new IdUsuarioNaoEncontradoException("Usuário não encontrado com o id: " + idUsuario)
         );
         Tarefa tarefaEntity = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
-                () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
+                () -> new IdTarefaNaoEncontradoException("Tarefa não encontrada com o id: " + idTarefa)
         );
         tarefaEntity.setDataConclusao(null);
         mapper.updateEntityFromDTO(tarefaupdateDTO, tarefaEntity);
@@ -79,10 +84,10 @@ public class TarefaService {
 
     public TarefaViewDTO alteraStatusTarefa(Integer idUsuario, Integer idTarefa, TarefaUpdateDTO tarefaUpdateDTO) {
         usuarioRepository.findById(idUsuario).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+                () -> new IdUsuarioNaoEncontradoException("Usuário não encontrado com o id: " + idUsuario)
         );
         Tarefa tarefaEntity = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
-                () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
+                () -> new IdTarefaNaoEncontradoException("Tarefa não encontrada com o id: " + idTarefa)
         );
         if (tarefaUpdateDTO.getStatus() != null) {
             tarefaEntity.setStatus(StatusTarefa.valueOf(tarefaUpdateDTO.getStatus().name()));
@@ -92,7 +97,7 @@ public class TarefaService {
                 tarefaEntity.setDataConclusao(null);
             }
         } else {
-            throw new RuntimeException("Status inválido ou não fornecido");
+            throw new StatusInvalidoException("Status inválido ou não fornecido");
         }
         mapper.updateEntityFromDTO(tarefaUpdateDTO, tarefaEntity);
         Tarefa tarefaAtualizada = repository.saveAndFlush(tarefaEntity);
@@ -101,10 +106,10 @@ public class TarefaService {
 
     public void deletarTarefa(Integer idUsuario, Integer idTarefa) {
         usuarioRepository.findById(idUsuario).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+                () -> new IdUsuarioNaoEncontradoException("Usuário não encontrado com o id: " + idUsuario)
         );
         Tarefa tarefa = repository.findByIdAndUsuarioId(idTarefa, idUsuario).orElseThrow(
-                () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
+                () -> new IdTarefaNaoEncontradoException("Tarefa não encontrada com o id: " + idTarefa)
         );
         repository.delete(tarefa);
     }

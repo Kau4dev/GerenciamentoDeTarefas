@@ -4,6 +4,7 @@ import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaCreateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaUpdateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaViewDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioCreateDTO;
+import com.kau4dev.GerenciamentoDeTarefas.exception.TarefaException.TarefaNaoPodeSerNuloException;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Tarefa;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.enums.StatusTarefa;
@@ -44,7 +45,7 @@ class TarefaServiceTest {
 
         @Test
         @DisplayName("Deve criar uma tarefa com sucesso")
-        void deveCriarTarefaComSucesso() {
+        void deveCriarTarefaComSucesso() throws TarefaNaoPodeSerNuloException {
 
             var usuarioCreateDTO = new UsuarioCreateDTO();
             usuarioCreateDTO.setNome("Kauã");
@@ -92,7 +93,7 @@ class TarefaServiceTest {
         @Test
         @DisplayName("Deve lançar exceção quando DTO for nulo")
         void deveLancarExcecaoQuandoDTOForNulo() {
-            RuntimeException exception = assertThrows(RuntimeException.class, () -> tarefaService.criarTarefa(1, null));
+            TarefaNaoPodeSerNuloException exception = assertThrows(TarefaNaoPodeSerNuloException.class, () -> tarefaService.criarTarefa(1, null));
             assertEquals("Falha ao converter DTO para entidade Tarefa", exception.getMessage());
         }
 
@@ -115,7 +116,7 @@ class TarefaServiceTest {
 
         @Test
         @DisplayName("Deve receber um status nulo e passar como PENDENTE")
-        void deveReceberUmStatusNuloEPassarComoPendente() {
+        void deveReceberUmStatusNuloEPassarComoPendente() throws TarefaNaoPodeSerNuloException {
 
             var usuarioCreateDTO = new UsuarioCreateDTO();
             usuarioCreateDTO.setNome("Kauã");
