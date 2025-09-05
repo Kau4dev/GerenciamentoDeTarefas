@@ -3,6 +3,8 @@ package com.kau4dev.GerenciamentoDeTarefas.business;
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioCreateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioUpdateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioViewDTO;
+import com.kau4dev.GerenciamentoDeTarefas.exception.UsuarioException.IdUsuarioNaoEncontradoException;
+import com.kau4dev.GerenciamentoDeTarefas.exception.UsuarioException.UsuarioJaExisteException;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.UsuarioRepository;
 import com.kau4dev.GerenciamentoDeTarefas.mapper.UsuarioMapper;
@@ -20,10 +22,10 @@ public class UsuarioService {
         this.mapper = mapper;
     }
 
-    public UsuarioViewDTO salvarUsuario(UsuarioCreateDTO usuarioCreateDTO) {
+    public UsuarioViewDTO salvarUsuario(UsuarioCreateDTO usuarioCreateDTO) throws UsuarioJaExisteException {
         Usuario usuario = mapper.toEntity(usuarioCreateDTO);
         if (repository.existsByEmail(usuario.getEmail())) {
-            throw new RuntimeException("Já existe um usuário cadastrado com o email: " + usuario.getEmail());
+            throw new UsuarioJaExisteException ("Já existe um usuário cadastrado com o email: " + usuario.getEmail());
         }
         Usuario usuarioSalvo = repository.saveAndFlush(usuario);
         return mapper.toViewDTO(usuarioSalvo);
@@ -38,14 +40,14 @@ public class UsuarioService {
 
     public UsuarioViewDTO buscarUsuarioPorId(Integer idUsuario) {
         Usuario usuario = repository.findById(idUsuario).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+                () -> new IdUsuarioNaoEncontradoException("Usuário não encontrado com o id: " + idUsuario)
         );
         return mapper.toViewDTO(usuario);
     }
 
     public UsuarioViewDTO atualizarUsuario(Integer idUsuario, UsuarioUpdateDTO usuarioUpdateDTO) {
         Usuario usuarioEntity = repository.findById(idUsuario).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+                () -> new IdUsuarioNaoEncontradoException("Usuário não encontrado com o id: " + idUsuario)
         );
         mapper.updateEntityFromDTO(usuarioUpdateDTO, usuarioEntity);
         Usuario usuarioAtualizado = repository.saveAndFlush(usuarioEntity);
@@ -54,7 +56,7 @@ public class UsuarioService {
 
     public void deletarUsuario(Integer idUsuario) {
           repository.findById(idUsuario).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+                () -> new IdUsuarioNaoEncontradoException("Usuário não encontrado com o id: " + idUsuario)
         );
         repository.deleteById(idUsuario);
     }

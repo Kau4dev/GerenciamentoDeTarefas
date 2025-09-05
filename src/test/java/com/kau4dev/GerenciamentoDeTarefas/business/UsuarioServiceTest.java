@@ -3,6 +3,7 @@ package com.kau4dev.GerenciamentoDeTarefas.business;
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioCreateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioUpdateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioViewDTO;
+import com.kau4dev.GerenciamentoDeTarefas.exception.UsuarioException.UsuarioJaExisteException;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.UsuarioRepository;
 import com.kau4dev.GerenciamentoDeTarefas.mapper.UsuarioMapper;
@@ -40,7 +41,7 @@ class UsuarioServiceTest {
 
         @Test
         @DisplayName("Deve salvar um usuário com sucesso")
-        void DeveSalvarUmUsuarioComSucesso() {
+        void DeveSalvarUmUsuarioComSucesso() throws UsuarioJaExisteException {
             // Arrange
             var usuarioCreateDTO = new UsuarioCreateDTO();
             usuarioCreateDTO.setNome("Kauã");
@@ -90,7 +91,7 @@ class UsuarioServiceTest {
             doReturn(true).when(usuarioRepository).existsByEmail(usuarioCreateDTO.getEmail());
 
             // Act & Assert
-            RuntimeException exception = assertThrows(RuntimeException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
+            UsuarioJaExisteException exception = assertThrows(UsuarioJaExisteException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
             assertEquals("Já existe um usuário cadastrado com o email: " + usuarioCreateDTO.getEmail(), exception.getMessage());
         }
 
@@ -113,7 +114,7 @@ class UsuarioServiceTest {
             doReturn(true).when(usuarioRepository).existsByEmail(usuarioCreateDTO.getEmail());
 
             // Act & Assert
-            RuntimeException exception = assertThrows(RuntimeException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
+            UsuarioJaExisteException exception = assertThrows(UsuarioJaExisteException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
             assertEquals("Já existe um usuário cadastrado com o email: " + usuarioCreateDTO.getEmail(), exception.getMessage());
         }
 
@@ -134,7 +135,7 @@ class UsuarioServiceTest {
             doReturn(usuarioEntity).when(usuarioMapper).toEntity(any(UsuarioCreateDTO.class));
             doReturn(true).when(usuarioRepository).existsByEmail(usuarioCreateDTO.getEmail());
             // Act & Assert
-            RuntimeException exception = assertThrows(RuntimeException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
+            UsuarioJaExisteException exception = assertThrows(UsuarioJaExisteException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
             assertEquals("Já existe um usuário cadastrado com o email: " + usuarioCreateDTO.getEmail(), exception.getMessage());
         }
 
