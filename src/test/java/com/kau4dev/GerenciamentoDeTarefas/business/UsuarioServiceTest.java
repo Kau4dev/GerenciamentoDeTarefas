@@ -11,9 +11,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 import java.util.List;
@@ -33,8 +35,16 @@ class UsuarioServiceTest {
     @Mock
     UsuarioMapper usuarioMapper;
 
-    @InjectMocks
+    @Mock
+    PasswordEncoder passwordEncoder;
+
     private UsuarioService usuarioService;
+
+    @BeforeEach
+    void setUp() {
+        usuarioService = new UsuarioService(usuarioRepository, usuarioMapper, passwordEncoder);
+        Mockito.when(passwordEncoder.encode(any(String.class))).thenReturn("senha-criptografada");
+    }
 
     @Nested
     class SalvarUsuario {

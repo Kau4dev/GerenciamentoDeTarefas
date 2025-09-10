@@ -8,6 +8,7 @@ import com.kau4dev.GerenciamentoDeTarefas.exception.UsuarioException.UsuarioJaEx
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.UsuarioRepository;
 import com.kau4dev.GerenciamentoDeTarefas.mapper.UsuarioMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -16,10 +17,12 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
     private final UsuarioMapper mapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository repository, UsuarioMapper mapper) {
+    public UsuarioService(UsuarioRepository repository, UsuarioMapper mapper, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.mapper = mapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UsuarioViewDTO salvarUsuario(UsuarioCreateDTO usuarioCreateDTO) throws UsuarioJaExisteException {
@@ -27,6 +30,7 @@ public class UsuarioService {
         if (repository.existsByEmail(usuario.getEmail())) {
             throw new UsuarioJaExisteException ("Já existe um usuário cadastrado com o email: " + usuario.getEmail());
         }
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         Usuario usuarioSalvo = repository.saveAndFlush(usuario);
         return mapper.toViewDTO(usuarioSalvo);
     }
@@ -62,4 +66,3 @@ public class UsuarioService {
     }
 
 }
-
