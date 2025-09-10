@@ -1,4 +1,4 @@
-package com.kau4dev.GerenciamentoDeTarefas.exception.TarefaException;
+package com.kau4dev.GerenciamentoDeTarefas.exception.tarefaException;
 
 public class IdTarefaNaoEncontradoException extends RuntimeException {
 

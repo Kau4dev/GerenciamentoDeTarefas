@@ -1,4 +1,4 @@
-package com.kau4dev.GerenciamentoDeTarefas.exception.UsuarioException;
+package com.kau4dev.GerenciamentoDeTarefas.exception.usuarioException;
 
 public class UsuarioJaExisteException extends Exception {
     

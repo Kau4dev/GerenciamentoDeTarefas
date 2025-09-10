@@ -2,9 +2,9 @@ package com.kau4dev.GerenciamentoDeTarefas.business;
 
 import com.kau4dev.GerenciamentoDeTarefas.dto.comentarioDTO.ComentarioCreateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.comentarioDTO.ComentarioViewDTO;
-import com.kau4dev.GerenciamentoDeTarefas.exception.ComentarioException.IdComentarioNaoEncontradoException;
-import com.kau4dev.GerenciamentoDeTarefas.exception.TarefaException.IdTarefaNaoEncontradoException;
-import com.kau4dev.GerenciamentoDeTarefas.exception.UsuarioException.IdUsuarioNaoEncontradoException;
+import com.kau4dev.GerenciamentoDeTarefas.exception.comentarioException.IdComentarioNaoEncontradoException;
+import com.kau4dev.GerenciamentoDeTarefas.exception.tarefaException.IdTarefaNaoEncontradoException;
+import com.kau4dev.GerenciamentoDeTarefas.exception.usuarioException.IdUsuarioNaoEncontradoException;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Comentario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Tarefa;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;

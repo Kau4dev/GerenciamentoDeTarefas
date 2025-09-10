@@ -4,7 +4,7 @@ import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaCreateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaUpdateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaViewDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioCreateDTO;
-import com.kau4dev.GerenciamentoDeTarefas.exception.TarefaException.TarefaNaoPodeSerNuloException;
+import com.kau4dev.GerenciamentoDeTarefas.exception.tarefaException.TarefaNaoPodeSerNuloException;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Tarefa;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.enums.StatusTarefa;

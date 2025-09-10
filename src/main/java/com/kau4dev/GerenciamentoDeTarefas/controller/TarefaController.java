@@ -4,7 +4,7 @@ import com.kau4dev.GerenciamentoDeTarefas.business.TarefaService;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaCreateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaUpdateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaViewDTO;
-import com.kau4dev.GerenciamentoDeTarefas.exception.TarefaException.TarefaNaoPodeSerNuloException;
+import com.kau4dev.GerenciamentoDeTarefas.exception.tarefaException.TarefaNaoPodeSerNuloException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
