@@ -54,6 +54,9 @@ public class UsuarioService {
                 () -> new IdUsuarioNaoEncontradoException("Usuário não encontrado com o id: " + idUsuario)
         );
         mapper.updateEntityFromDTO(usuarioUpdateDTO, usuarioEntity);
+        if (usuarioUpdateDTO.getSenha() != null) {
+            usuarioEntity.setSenha(passwordEncoder.encode(usuarioUpdateDTO.getSenha()));
+        }
         Usuario usuarioAtualizado = repository.saveAndFlush(usuarioEntity);
         return mapper.toViewDTO(usuarioAtualizado);
     }
