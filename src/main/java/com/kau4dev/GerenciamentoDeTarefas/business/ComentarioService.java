@@ -2,6 +2,9 @@ package com.kau4dev.GerenciamentoDeTarefas.business;
 
 import com.kau4dev.GerenciamentoDeTarefas.dto.comentarioDTO.ComentarioCreateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.comentarioDTO.ComentarioViewDTO;
+import com.kau4dev.GerenciamentoDeTarefas.exception.comentarioException.IdComentarioNaoEncontradoException;
+import com.kau4dev.GerenciamentoDeTarefas.exception.tarefaException.IdTarefaNaoEncontradoException;
+import com.kau4dev.GerenciamentoDeTarefas.exception.usuarioException.IdUsuarioNaoEncontradoException;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Comentario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Tarefa;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
@@ -30,10 +33,10 @@ public class ComentarioService {
 }
     public ComentarioViewDTO criarComentario(Integer idTarefa, Integer idUsuario, ComentarioCreateDTO comentarioCreateDTO) {
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+                () -> new IdUsuarioNaoEncontradoException("Usuário não encontrado com o id: " + idUsuario)
         );
         Tarefa tarefa = tarefaRepository.findById(idTarefa).orElseThrow(
-                () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
+                () -> new IdTarefaNaoEncontradoException("Tarefa não encontrada com o id: " + idTarefa)
         );
         Comentario comentario = comentarioMapper.toEntity(comentarioCreateDTO);
         comentario.setUsuario(usuario);
@@ -46,7 +49,7 @@ public class ComentarioService {
 
     public List<ComentarioViewDTO> listarComentarios(Integer idTarefa) {
         tarefaRepository.findById(idTarefa).orElseThrow(
-                () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
+                () -> new IdTarefaNaoEncontradoException("Tarefa não encontrada com o id: " + idTarefa)
         );
         List<Comentario> comentarios = repository.findByTarefaId(idTarefa);
         return comentarios.stream()
@@ -56,13 +59,13 @@ public class ComentarioService {
 
     public void deletarComentario(Integer idTarefa, Integer idUsuario, Integer idComentario) {
         tarefaRepository.findById(idTarefa).orElseThrow(
-                () -> new RuntimeException("Tarefa não encontrada com o id: " + idTarefa)
+                () -> new IdTarefaNaoEncontradoException("Tarefa não encontrada com o id: " + idTarefa)
         );
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado com o id: " + idUsuario)
+                () -> new IdUsuarioNaoEncontradoException("Usuário não encontrado com o id: " + idUsuario)
         );
         Comentario comentario = repository.findById(idComentario).orElseThrow(
-                () -> new RuntimeException("Comentário não encontrado com o id: " + idComentario)
+                () -> new IdComentarioNaoEncontradoException("Comentário não encontrado com o id: " + idComentario)
         );
         if (!comentario.getUsuario().getId().equals(idUsuario)) {
             throw new RuntimeException("Comentário não pertence ao usuário com id: " + idUsuario);

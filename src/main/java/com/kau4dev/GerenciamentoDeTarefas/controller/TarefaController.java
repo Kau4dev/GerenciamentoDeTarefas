@@ -4,6 +4,7 @@ import com.kau4dev.GerenciamentoDeTarefas.business.TarefaService;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaCreateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaUpdateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.tarefaDTO.TarefaViewDTO;
+import com.kau4dev.GerenciamentoDeTarefas.exception.tarefaException.TarefaNaoPodeSerNuloException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,7 +33,7 @@ public class TarefaController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @PostMapping
-    public ResponseEntity<Void> criarTarefa(@PathVariable Integer idUsuario, @RequestBody @Valid TarefaCreateDTO tarefaCreateDTO){
+    public ResponseEntity<Void> criarTarefa(@PathVariable Integer idUsuario, @RequestBody @Valid TarefaCreateDTO tarefaCreateDTO) throws TarefaNaoPodeSerNuloException {
         tarefaService.criarTarefa(idUsuario, tarefaCreateDTO);
         return ResponseEntity.status(201).build();
     }

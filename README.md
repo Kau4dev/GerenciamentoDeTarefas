@@ -76,20 +76,48 @@ mvn spring-boot:run
 ## 🗄️ Estrutura do Projeto
 
 ```
-src/
-├── main/
-│   ├── java/com/kau4dev/GerenciamentoDeTarefas/
-│   │   ├── business/      # Regras de negócio e serviços
-│   │   ├── controller/    # Endpoints da API
-│   │   ├── dto/          # Objetos de transferência
-│   │   └── infrastructure/# Configurações, entidades e repos
-│   └── resources/
-│       └── application.properties
-└── test/
-    └── java/             # Testes unitários
+GerenciamentoDeTarefas/
+├── docker-compose.yml
+├── Dockerfile
+├── pom.xml
+├── README.md
+├── .env
+├── src/
+│   ├── main/
+│   │   ├── java/com/kau4dev/GerenciamentoDeTarefas/
+│   │   │   ├── business/         # Serviços e regras de negócio
+│   │   │   ├── config/           # Configurações de segurança, JWT, etc
+│   │   │   ├── controller/       # Endpoints REST
+│   │   │   ├── dto/              # Data Transfer Objects
+│   │   │   ├── exception/        # Exceções customizadas
+│   │   │   ├── infrastructure/   # Entidades JPA e repositórios
+│   │   │   └── mapper/           # MapStruct mappers
+│   │   └── resources/
+│   │       ├── application.properties
+│   │       ├── static/
+│   │       └── templates/
+│   └── test/
+│       └── java/com/kau4dev/GerenciamentoDeTarefas/
+│           ├── business/         # Testes unitários dos serviços
+│           └── GerenciamentoDeTarefasApplicationTests.java
+└── target/                       # Arquivos gerados (build)
 ```
 
 ## 📌 API Endpoints
+
+### Autenticação
+```http
+# Login
+POST /auth/login
+{
+    "login": "email@exemplo.com",
+    "senha": "suaSenhaSegura"
+}
+# Resposta
+{
+    "token": "<jwt_token>"
+}
+```
 
 ### Usuários
 ```http
@@ -188,7 +216,12 @@ Encontrou um bug ou tem uma sugestão? Por favor, abra uma issue:
 
 ## ✨ Próximos Passos
 
-- [ ] Implementar autenticação JWT
+- [x] Implementar autenticação JWT
+- [x] Adicionar endpoints de login
+- [x] Cobertura de testes para autenticação e autorização
+- [x] Melhorar cobertura de testes dos serviços
 - [ ] Adicionar paginação nas listagens
 - [ ] Implementar sistema de notificações
-- [ ] Melhorar cobertura de testes
+- [ ] Melhorar documentação da API (Swagger)
+- [ ] Adicionar testes de integração para controllers
+- [ ] Melhorar tratamento de erros globais

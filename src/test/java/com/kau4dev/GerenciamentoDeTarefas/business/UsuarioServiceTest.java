@@ -3,6 +3,7 @@ package com.kau4dev.GerenciamentoDeTarefas.business;
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioCreateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioUpdateDTO;
 import com.kau4dev.GerenciamentoDeTarefas.dto.usuarioDTO.UsuarioViewDTO;
+import com.kau4dev.GerenciamentoDeTarefas.exception.usuarioException.UsuarioJaExisteException;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.entity.Usuario;
 import com.kau4dev.GerenciamentoDeTarefas.infrastructure.repository.UsuarioRepository;
 import com.kau4dev.GerenciamentoDeTarefas.mapper.UsuarioMapper;
@@ -10,9 +11,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 import java.util.List;
@@ -32,16 +35,24 @@ class UsuarioServiceTest {
     @Mock
     UsuarioMapper usuarioMapper;
 
-    @InjectMocks
+    @Mock
+    PasswordEncoder passwordEncoder;
+
     private UsuarioService usuarioService;
+
+    @BeforeEach
+    void setUp() {
+        usuarioService = new UsuarioService(usuarioRepository, usuarioMapper, passwordEncoder);
+    }
 
     @Nested
     class SalvarUsuario {
 
         @Test
         @DisplayName("Deve salvar um usuário com sucesso")
-        void DeveSalvarUmUsuarioComSucesso() {
+        void DeveSalvarUmUsuarioComSucesso() throws UsuarioJaExisteException {
             // Arrange
+            Mockito.when(passwordEncoder.encode(any(String.class))).thenReturn("senha-criptografada");
             var usuarioCreateDTO = new UsuarioCreateDTO();
             usuarioCreateDTO.setNome("Kauã");
             usuarioCreateDTO.setEmail("kaua@gmail.com");
@@ -90,7 +101,7 @@ class UsuarioServiceTest {
             doReturn(true).when(usuarioRepository).existsByEmail(usuarioCreateDTO.getEmail());
 
             // Act & Assert
-            RuntimeException exception = assertThrows(RuntimeException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
+            UsuarioJaExisteException exception = assertThrows(UsuarioJaExisteException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
             assertEquals("Já existe um usuário cadastrado com o email: " + usuarioCreateDTO.getEmail(), exception.getMessage());
         }
 
@@ -113,7 +124,7 @@ class UsuarioServiceTest {
             doReturn(true).when(usuarioRepository).existsByEmail(usuarioCreateDTO.getEmail());
 
             // Act & Assert
-            RuntimeException exception = assertThrows(RuntimeException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
+            UsuarioJaExisteException exception = assertThrows(UsuarioJaExisteException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
             assertEquals("Já existe um usuário cadastrado com o email: " + usuarioCreateDTO.getEmail(), exception.getMessage());
         }
 
@@ -134,7 +145,7 @@ class UsuarioServiceTest {
             doReturn(usuarioEntity).when(usuarioMapper).toEntity(any(UsuarioCreateDTO.class));
             doReturn(true).when(usuarioRepository).existsByEmail(usuarioCreateDTO.getEmail());
             // Act & Assert
-            RuntimeException exception = assertThrows(RuntimeException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
+            UsuarioJaExisteException exception = assertThrows(UsuarioJaExisteException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
             assertEquals("Já existe um usuário cadastrado com o email: " + usuarioCreateDTO.getEmail(), exception.getMessage());
         }
 
@@ -247,9 +258,10 @@ class UsuarioServiceTest {
     class AtualizarUsuario {
 
         @Test
-        @DisplayName("Deve atualizar usuário com sucesso")
+        @DisplayName("Deve atualizar usuário com sucesso e codificar a senha")
         void DeveAtualizarUsuarioComSucesso() {
             // Arrange
+            Mockito.when(passwordEncoder.encode(any(String.class))).thenReturn("senha-criptografada");
             var usuarioUpdateDTO = new UsuarioUpdateDTO();
             usuarioUpdateDTO.setNome("Kauã Victor");
             usuarioUpdateDTO.setSenha("S123456");
@@ -258,13 +270,61 @@ class UsuarioServiceTest {
                     .id(1)
                     .nome("Kauã")
                     .email("kaua1@gmail.com")
-                    .senha("S123456")
+                    .senha("senha-antiga")
                     .build();
 
             var usuarioEntityAtualizado = Usuario.builder()
                     .id(1)
                     .nome("Kauã Victor")
                     .email("kaua@gmail.com")
+                    .senha("senha-criptografada")
+                    .build();
+
+            var usuarioViewDTO = new UsuarioViewDTO();
+            usuarioViewDTO.setIdUsuario(1);
+            usuarioViewDTO.setNome("Kauã Victor");
+            usuarioViewDTO.setEmail("kaua@gmail.com");
+
+            doReturn(Optional.of(usuarioEntity)).when(usuarioRepository).findById(1);
+            // O mapper só atualiza o nome, não sobrescreve a senha
+            doAnswer(invocation -> {
+                UsuarioUpdateDTO dto = invocation.getArgument(0);
+                Usuario entity = invocation.getArgument(1);
+                entity.setNome(dto.getNome());
+                return null;
+            }).when(usuarioMapper).updateEntityFromDTO(any(UsuarioUpdateDTO.class), any(Usuario.class));
+            doReturn(usuarioEntityAtualizado).when(usuarioRepository).saveAndFlush(any(Usuario.class));
+            doReturn(usuarioViewDTO).when(usuarioMapper).toViewDTO(any(Usuario.class));
+            // Act
+            var output = usuarioService.atualizarUsuario(1, usuarioUpdateDTO);
+            // Assert
+            assertNotNull(output);
+            assertEquals("Kauã Victor", output.getNome());
+            assertEquals("kaua@gmail.com", output.getEmail());
+            // Verifica se a senha foi codificada
+            assertEquals("senha-criptografada", usuarioEntity.getSenha());
+        }
+
+        @Test
+        @DisplayName("Deve atualizar usuário sem alterar senha se não informada")
+        void DeveAtualizarUsuarioSemAlterarSenhaSeNaoInformada() {
+            // Arrange
+            var usuarioUpdateDTO = new UsuarioUpdateDTO();
+            usuarioUpdateDTO.setNome("Kauã Victor");
+            usuarioUpdateDTO.setSenha(null);
+
+            var usuarioEntity = Usuario.builder()
+                    .id(1)
+                    .nome("Kauã")
+                    .email("kaua1@gmail.com")
+                    .senha("senha-antiga")
+                    .build();
+
+            var usuarioEntityAtualizado = Usuario.builder()
+                    .id(1)
+                    .nome("Kauã Victor")
+                    .email("kaua@gmail.com")
+                    .senha("senha-antiga")
                     .build();
 
             var usuarioViewDTO = new UsuarioViewDTO();
@@ -277,7 +337,6 @@ class UsuarioServiceTest {
                 UsuarioUpdateDTO dto = invocation.getArgument(0);
                 Usuario entity = invocation.getArgument(1);
                 entity.setNome(dto.getNome());
-                entity.setSenha(dto.getSenha());
                 return null;
             }).when(usuarioMapper).updateEntityFromDTO(any(UsuarioUpdateDTO.class), any(Usuario.class));
             doReturn(usuarioEntityAtualizado).when(usuarioRepository).saveAndFlush(any(Usuario.class));
@@ -288,7 +347,8 @@ class UsuarioServiceTest {
             assertNotNull(output);
             assertEquals("Kauã Victor", output.getNome());
             assertEquals("kaua@gmail.com", output.getEmail());
-
+            // Verifica se a senha não foi alterada
+            assertEquals("senha-antiga", usuarioEntity.getSenha());
         }
 
         @Test
