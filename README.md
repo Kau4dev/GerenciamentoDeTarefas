@@ -224,4 +224,4 @@ Encontrou um bug ou tem uma sugestão? Por favor, abra uma issue:
 - [ ] Implementar sistema de notificações
 - [ ] Melhorar documentação da API (Swagger)
 - [ ] Adicionar testes de integração para controllers
-- [ ] Melhorar tratamento de erros globais
+- [X] Melhorar tratamento de erros globais
