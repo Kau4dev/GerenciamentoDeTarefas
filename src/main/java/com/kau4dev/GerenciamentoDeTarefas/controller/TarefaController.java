@@ -95,33 +95,5 @@ public class TarefaController {
         return ResponseEntity.status(204).build();
     }
 
-    @Operation(summary = "Manipulador de exceções para recursos não encontrados")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "404", description = "Recurso não encontrado")
-    })
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleNotFound(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
-
-    @Operation(summary = "Manipulador de exceções para requisições inválidas")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "400", description = "Requisição inválida")
-    })
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleBadRequest(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-
-        ex.getBindingResult().getFieldErrors().forEach((error) -> {
-            String fieldName = error.getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-
-        return errors;
-    }
-
 
 }

@@ -44,7 +44,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @GetMapping
-    public ResponseEntity<List<UsuarioViewDTO>> listarUsuarios(){
+    public ResponseEntity<List<UsuarioViewDTO>> listarUsuarios() {
         return ResponseEntity.ok(usuarioService.listarUsuarios());
     }
 
@@ -55,7 +55,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @GetMapping("/{idUsuario}")
-    public ResponseEntity<UsuarioViewDTO> buscarUsuarioPorId(@PathVariable Integer idUsuario){
+    public ResponseEntity<UsuarioViewDTO> buscarUsuarioPorId(@PathVariable Integer idUsuario) {
         return ResponseEntity.ok(usuarioService.buscarUsuarioPorId(idUsuario));
     }
 
@@ -66,7 +66,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @PutMapping("/{idUsuario}")
-    public ResponseEntity<UsuarioViewDTO> atualizarUsuario(@PathVariable Integer idUsuario, @RequestBody @Valid UsuarioUpdateDTO usuarioUpdateDTO){
+    public ResponseEntity<UsuarioViewDTO> atualizarUsuario(@PathVariable Integer idUsuario, @RequestBody @Valid UsuarioUpdateDTO usuarioUpdateDTO) {
         UsuarioViewDTO atualizado = usuarioService.atualizarUsuario(idUsuario, usuarioUpdateDTO);
         return ResponseEntity.ok(atualizado);
     }
@@ -78,39 +78,9 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @DeleteMapping("/{idUsuario}")
-    public ResponseEntity<Void> deletarUsuario(@PathVariable Integer idUsuario){
+    public ResponseEntity<Void> deletarUsuario(@PathVariable Integer idUsuario) {
         usuarioService.deletarUsuario(idUsuario);
         return ResponseEntity.status(204).build();
     }
-
-    @Operation(summary = "Manipulador de exceções para recursos não encontrados")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "404", description = "Recurso não encontrado")
-    })
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleNotFound(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
-
-    @Operation(summary = "Manipulador de exceções para requisições inválidas")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "400", description = "Requisição inválida")
-    })
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleBadRequest(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-
-        ex.getBindingResult().getFieldErrors().forEach((error) -> {
-            String fieldName = error.getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-
-        return errors;
-    }
-
-
 
 }
