@@ -54,7 +54,7 @@ docker-compose up -d
 
 A aplicação estará disponível em:
 - API: http://localhost:8080
-- Swagger: http://localhost:8080/swagger-ui.html
+- Swagger: http://localhost:8080/swagger-ui/index.html
 - Banco de dados: localhost:5432
 
 ### 💻 Localmente
@@ -221,7 +221,6 @@ Encontrou um bug ou tem uma sugestão? Por favor, abra uma issue:
 - [x] Cobertura de testes para autenticação e autorização
 - [x] Melhorar cobertura de testes dos serviços
 - [ ] Adicionar paginação nas listagens
-- [ ] Implementar sistema de notificações
-- [ ] Melhorar documentação da API (Swagger)
+- [x] Melhorar documentação da API (Swagger)
 - [ ] Adicionar testes de integração para controllers
 - [X] Melhorar tratamento de erros globais
