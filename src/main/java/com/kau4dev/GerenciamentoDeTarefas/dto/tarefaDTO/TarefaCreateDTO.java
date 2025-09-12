@@ -22,7 +22,7 @@ public class TarefaCreateDTO {
 
     @Size(max = 255, message = "A descrição não pode ter mais de 255 caracteres")
     @Pattern(regexp = "^[A-ZÀ-Ý][A-Za-zÀ-ÿ0-9\\s]*$",
-            message = "A descrição deve começar com letra maiúscula e conter apenas letras, números e espaços") private String Descricao;
+            message = "A descrição deve começar com letra maiúscula e conter apenas letras, números e espaços")
     private String descricao;
 
     @NotNull(message = "O status não pode ser nulo")

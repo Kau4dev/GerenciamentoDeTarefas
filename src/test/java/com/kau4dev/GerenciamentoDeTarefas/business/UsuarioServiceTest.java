@@ -75,7 +75,7 @@ class UsuarioServiceTest {
             doReturn(usuarioViewDTO).when(usuarioMapper).toViewDTO(any(Usuario.class));
 
             // Act
-            var output = usuarioService.salvarUsuario(usuarioCreateDTO);
+            var output = usuarioService.criarUsuario(usuarioCreateDTO);
 
             // Assert
             assertNotNull(output);
@@ -101,7 +101,7 @@ class UsuarioServiceTest {
             doReturn(true).when(usuarioRepository).existsByEmail(usuarioCreateDTO.getEmail());
 
             // Act & Assert
-            UsuarioJaExisteException exception = assertThrows(UsuarioJaExisteException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
+            UsuarioJaExisteException exception = assertThrows(UsuarioJaExisteException.class, () -> usuarioService.criarUsuario(usuarioCreateDTO));
             assertEquals("Já existe um usuário cadastrado com o email: " + usuarioCreateDTO.getEmail(), exception.getMessage());
         }
 
@@ -124,7 +124,7 @@ class UsuarioServiceTest {
             doReturn(true).when(usuarioRepository).existsByEmail(usuarioCreateDTO.getEmail());
 
             // Act & Assert
-            UsuarioJaExisteException exception = assertThrows(UsuarioJaExisteException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
+            UsuarioJaExisteException exception = assertThrows(UsuarioJaExisteException.class, () -> usuarioService.criarUsuario(usuarioCreateDTO));
             assertEquals("Já existe um usuário cadastrado com o email: " + usuarioCreateDTO.getEmail(), exception.getMessage());
         }
 
@@ -145,7 +145,7 @@ class UsuarioServiceTest {
             doReturn(usuarioEntity).when(usuarioMapper).toEntity(any(UsuarioCreateDTO.class));
             doReturn(true).when(usuarioRepository).existsByEmail(usuarioCreateDTO.getEmail());
             // Act & Assert
-            UsuarioJaExisteException exception = assertThrows(UsuarioJaExisteException.class, () -> usuarioService.salvarUsuario(usuarioCreateDTO));
+            UsuarioJaExisteException exception = assertThrows(UsuarioJaExisteException.class, () -> usuarioService.criarUsuario(usuarioCreateDTO));
             assertEquals("Já existe um usuário cadastrado com o email: " + usuarioCreateDTO.getEmail(), exception.getMessage());
         }
 

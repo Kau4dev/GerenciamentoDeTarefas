@@ -220,7 +220,5 @@ Encontrou um bug ou tem uma sugestão? Por favor, abra uma issue:
 - [x] Adicionar endpoints de login
 - [x] Cobertura de testes para autenticação e autorização
 - [x] Melhorar cobertura de testes dos serviços
-- [ ] Adicionar paginação nas listagens
 - [x] Melhorar documentação da API (Swagger)
-- [ ] Adicionar testes de integração para controllers
 - [X] Melhorar tratamento de erros globais

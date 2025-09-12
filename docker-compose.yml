@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:16
     container_name: postgres
     ports:
       - "5432:5432"
@@ -10,6 +10,8 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=gerenciador_tarefas
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   backend:
     build: .
@@ -22,3 +24,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
     depends_on:
       - postgres
+
+volumes:
+  postgres_data:
