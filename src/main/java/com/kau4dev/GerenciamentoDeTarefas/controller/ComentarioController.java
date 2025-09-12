@@ -45,9 +45,9 @@ public class ComentarioController {
             @ApiResponse(responseCode = "404", description = "Usuário ou tarefa não encontrado")
     })
     @PostMapping
-    public ResponseEntity<Void> criarComentario(@PathVariable Integer idUsuario, @PathVariable Integer idTarefa, @RequestBody @Valid ComentarioCreateDTO comentarioCreateDTO){
-        comentarioService.criarComentario(idTarefa, idUsuario, comentarioCreateDTO);
-        return ResponseEntity.status(201).build();
+    public ResponseEntity<ComentarioViewDTO> criarComentario(@PathVariable Integer idUsuario, @PathVariable Integer idTarefa, @RequestBody @Valid ComentarioCreateDTO comentarioCreateDTO){
+        ComentarioViewDTO comentarioCriado = comentarioService.criarComentario(idTarefa, idUsuario, comentarioCreateDTO);
+        return ResponseEntity.status(201).body(comentarioCriado);
     }
 
     @Operation(summary = "Lista todos os comentários de uma tarefa específica de um usuário específico", description = "Retorna uma lista de todos os comentários associados a uma tarefa existente de um usuário existente.",

@@ -44,9 +44,9 @@ public class TarefaController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @PostMapping
-    public ResponseEntity<Void> criarTarefa(@PathVariable Integer idUsuario, @RequestBody @Valid TarefaCreateDTO tarefaCreateDTO) throws TarefaNaoPodeSerNuloException {
-        tarefaService.criarTarefa(idUsuario, tarefaCreateDTO);
-        return ResponseEntity.status(201).build();
+    public ResponseEntity<TarefaViewDTO> criarTarefa(@PathVariable Integer idUsuario, @RequestBody @Valid TarefaCreateDTO tarefaCreateDTO) throws TarefaNaoPodeSerNuloException {
+        TarefaViewDTO tarefaCriada = tarefaService.criarTarefa(idUsuario, tarefaCreateDTO);
+        return ResponseEntity.status(201).body(tarefaCriada);
     }
 
     @Operation(summary = "Lista todas as tarefas de um usuário específico", description = "Retorna uma lista de todas as tarefas associadas a um usuário existente.",
