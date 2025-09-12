@@ -119,65 +119,86 @@ POST /auth/login
 }
 ```
 
+---
+
 ### Usuários
 ```http
 # Listar usuários
-GET /api/usuarios
+GET /usuarios
 
-# Buscar usuário
-GET /api/usuarios/{id}
+# Buscar usuário por ID
+GET /usuarios/{idUsuario}
 
 # Criar usuário
-POST /api/usuarios
+POST /usuarios
 {
     "nome": "João Silva",
-    "email": "joao@email.com"
+    "email": "joao@email.com",
+    "senha": "suaSenhaSegura"
 }
 
 # Atualizar usuário
-PUT /api/usuarios/{id}
+PUT /usuarios/{idUsuario}
 {
     "nome": "João Silva Atualizado",
-    "email": "joao.novo@email.com"
+    "senha": "SenhaNovaSegura"
 }
 
 # Deletar usuário
-DELETE /api/usuarios/{id}
+DELETE /usuarios/{idUsuario}
 ```
+
+---
 
 ### Tarefas
 ```http
-# Criar tarefa
-POST /api/tarefas
+# Criar tarefa para um usuário
+POST /usuarios/{idUsuario}/tarefas
 {
     "titulo": "Implementar API",
     "descricao": "Desenvolver endpoints REST",
-    "status": "PENDENTE",
-    "usuarioId": 1
+    "status": "PENDENTE"
 }
 
-# Listar tarefas
-GET /api/tarefas
+# Listar tarefas de um usuário
+GET /usuarios/{idUsuario}/tarefas
 
-# Atualizar status
-PUT /api/tarefas/{id}/status
+# Buscar tarefa por ID
+GET /usuarios/{idUsuario}/tarefas/{idTarefa}
+
+# Atualizar tarefa
+PUT /usuarios/{idUsuario}/tarefas/{idTarefa}
+{
+    "titulo": "Novo título",
+    "descricao": "Nova descrição",
+    "status": "CONCLUIDA"
+}
+
+# Alterar status da tarefa
+PATCH /usuarios/{idUsuario}/tarefas/{idTarefa}/status
 {
     "status": "CONCLUIDA"
 }
+
+# Deletar tarefa
+DELETE /usuarios/{idUsuario}/tarefas/{idTarefa}
 ```
+
+---
 
 ### Comentários
 ```http
-# Criar comentário
-POST /api/comentarios
+# Criar comentário em uma tarefa
+POST /usuarios/{idUsuario}/tarefas/{idTarefa}/comentarios
 {
-    "texto": "Iniciando implementação",
-    "tarefaId": 1,
-    "usuarioId": 1
+    "texto": "Iniciando implementação"
 }
 
-# Listar comentários por tarefa
-GET /api/comentarios?tarefaId={id}
+# Listar comentários de uma tarefa
+GET /usuarios/{idUsuario}/tarefas/{idTarefa}/comentarios
+
+# Deletar comentário
+DELETE /usuarios/{idUsuario}/tarefas/{idTarefa}/comentarios/{idComentario}
 ```
 
 ## 🧪 Testes
@@ -221,4 +242,8 @@ Encontrou um bug ou tem uma sugestão? Por favor, abra uma issue:
 - [x] Cobertura de testes para autenticação e autorização
 - [x] Melhorar cobertura de testes dos serviços
 - [x] Melhorar documentação da API (Swagger)
-- [X] Melhorar tratamento de erros globais
+- [x] Melhorar tratamento de erros globais
+- [ ] Adicionar paginação nas listagens
+- [ ] Implementar sistema de notificações
+- [ ] Adicionar testes de integração para controllers
+- [ ] Melhorar exemplos e descrição dos endpoints no Swagger
