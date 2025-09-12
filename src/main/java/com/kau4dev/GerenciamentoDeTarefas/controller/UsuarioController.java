@@ -45,9 +45,9 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @PostMapping
-    public ResponseEntity<Void> criarUsuario(@RequestBody @Valid UsuarioCreateDTO usuarioCreateDTO) throws UsuarioJaExisteException {
-        usuarioService.salvarUsuario(usuarioCreateDTO);
-        return ResponseEntity.status(201).build();
+    public ResponseEntity<UsuarioViewDTO> criarUsuario(@RequestBody @Valid UsuarioCreateDTO usuarioCreateDTO) throws UsuarioJaExisteException {
+        UsuarioViewDTO usuarioCriado = usuarioService.criarUsuario(usuarioCreateDTO);
+        return ResponseEntity.status(201).body(usuarioCriado);
     }
 
     @Operation(summary = "Lista todos os usuários", description = "Retorna uma lista de todos os usuários cadastrados.")

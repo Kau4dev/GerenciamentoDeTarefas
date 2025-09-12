@@ -25,7 +25,7 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UsuarioViewDTO salvarUsuario(UsuarioCreateDTO usuarioCreateDTO) throws UsuarioJaExisteException {
+    public UsuarioViewDTO criarUsuario(UsuarioCreateDTO usuarioCreateDTO) throws UsuarioJaExisteException {
         Usuario usuario = mapper.toEntity(usuarioCreateDTO);
         if (repository.existsByEmail(usuario.getEmail())) {
             throw new UsuarioJaExisteException ("Já existe um usuário cadastrado com o email: " + usuario.getEmail());
